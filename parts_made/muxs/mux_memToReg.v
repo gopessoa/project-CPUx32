@@ -20,17 +20,17 @@ module mux_memToReg(
     wire [31:0] A6;
     wire [31:0] A7;
 
-    assign A1 = (selector[0]) ? data_1 : data_0;
-    assign A2 = (selector[0]) ? data_3 : data_2;
-    assign A5 = (selector[1]) ? A2 : A1;
+    assign A1 = (selector[0]) ? data_1 : data_0; 0 
+    assign A2 = (selector[0]) ? data_3 : data_2; 2
+    assign A5 = (selector[1]) ? A2 : A1; 0
  
-    assign A3 = (selector[0]) ? data_5 : data_4;
-    assign A4 = (selector[0]) ? data_7 : data_6;
-    assign A6 = (selector[1]) ? A4 : A3;
+    assign A3 = (selector[0]) ? data_5 : data_4; 4
+    assign A4 = (selector[0]) ? data_7 : data_6; 6
+    assign A6 = (selector[1]) ? A4 : A3; 4
 
-    assign A7 = (selector[2]) ? A6 : A5;
+    assign A7 = (selector[2]) ? A6 : A5; 0 
 
-    assign memToReg = (selector[3]) ? 32'b00000000000000000000000011100011 : A7;
+    assign memToReg = (selector[3]) ? 32'b00000000000000000000000011100011 : A7; 0
 
 
 endmodule

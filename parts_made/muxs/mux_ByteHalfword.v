@@ -5,6 +5,6 @@ module mux_ByteHalfword(
     output wire [31:0] data_out
 );
 
-    assign out = (selector) ? data_Byte : data_Halfword
+    assign data_out = (selector) ? data_Byte : data_Halfword
 
 endmudule
