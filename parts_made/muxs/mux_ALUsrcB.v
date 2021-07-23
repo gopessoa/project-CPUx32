@@ -11,5 +11,5 @@ module mux_ALUsrcB(
     assign A1 = (selector[0]) ? 32'b00000000000000000000000000000100 : data_memB;
     assign A2 = (selector[0]) ? data_sgnExtnd : data_shiftL2;
     assign src_B = (selector[1]) ?  A2 : A1 ;
-
+  
 endmodule
