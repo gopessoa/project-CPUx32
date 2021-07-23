@@ -1,7 +1,7 @@
 module mux_RegDST(
     input wire [1:0] selector,
-    input wire [20:16] data_0,
-    input wire [15:0] data_1,
+    input wire [4:0] data_0,
+    input wire [4:0] data_1,
     output wire [4:0] out;
 )
 
