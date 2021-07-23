@@ -10,8 +10,7 @@ module mux_memToReg(
     input wire [31:0] data_7,
 
     output wire [31:0] memToReg
-)
-    0100
+);
 
     wire [31:0] A1; 
     wire [31:0] A2;
