@@ -2,8 +2,8 @@ module mux_RegDST(
     input wire [1:0] selector,
     input wire [4:0] data_0,
     input wire [4:0] data_1,
-    output wire [4:0] data_out;
-)
+    output wire [4:0] data_out
+);
 
     wire[4:0] A1;
     wire[4:0] A2;
