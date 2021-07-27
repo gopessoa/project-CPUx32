@@ -22,7 +22,7 @@ module mult (
         q <= multiplier;
         r <= 32'b0;
         test <= 1'b0;
-        count <= 4'b0;
+        c <= 4'b0;
       end 
       else begin
         case ({q[0], test})
@@ -30,7 +30,7 @@ module mult (
         2'b1_0 : {r, q, test} <= {diff[31], diff, q};
         default: {r, q, test} <= {r[31, r, q]};
         endcase
-        count <= count + 1'b1;
+        c <= c + 1'b1;
       end
     end
 
