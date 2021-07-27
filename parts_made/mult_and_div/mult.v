@@ -8,7 +8,9 @@ module mult (
     output wire [31:0] low,
 
 );
-    reg [31:0] m, q, r;
+    // m = multiplicand, q = multiplier, r = result
+    // c = count
+    reg [31:0] m, q, r; 
     reg [3:0] c;
     reg test;
     
@@ -36,11 +38,12 @@ module mult (
     alu sub (r, m, 1'b1, diff);
 
     assign hi = {r, q};
-    assign low = {count < 8};
+    assign low = {c < 8};
 
 endmodule
 
 //alu para as operações de soma e subtração
+//cin = carry-in
 module alu(
     input cin;
     input [31:0] a;
