@@ -28,7 +28,7 @@ module mult (
         case ({q[0], test})
         2'b0_1 : {r, q, test} <= {sum[31], sum, q};
         2'b1_0 : {r, q, test} <= {diff[31], diff, q};
-        default: {r, q, test} <= {r[31], r, q};
+        default: {r, q, test} <= {r[31, r, q]};
         endcase
         c <= c + 1'b1;
       end
