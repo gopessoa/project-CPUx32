@@ -1,55 +1,45 @@
 module mult (
-    input wire [31:0] multiplicand,
-    input wire [31:0] multiplier,
-    input wire clock,
-    input wire start,
-    output busy,
-    output wire [31:0] hi,
-    output wire [31:0] low  
-
+    parameter bits = 32;
+    parameter counter = ‘bits/2;
+    input [31:0] a;
+    input [31:0] b;
+    output [31:0] hi;
+    output [31:0] low;
 );
-    // m = multiplicand, q = multiplier, r = result
-    // c = count
-    reg [31:0] m, q, r; 
-    reg [31:0] c;
-    reg test;
-    
-    wire [31:0] sum, diff;
+    reg [2:0] test_case[counter-1:0];
+    reg [32:0] collection_1[counter-1:0];
+    reg [63:0] accumulator[counter-1:0];
+    reg [63:0] product;
 
-    always @(posedge clock) begin
-      if (start) begin
-        m <= multiplicand;
-        q <= multiplier;
-        r <= 32'b0;
-        test <= 1'b0;
-        c <= 32'b0;
-      end 
-      else begin
-        case ({q[0], test})
-        2'b0_1 : {r, q, test} <= {sum[31], sum, q};
-        2'b1_0 : {r, q, test} <= {diff[31], diff, q};
-        default: {r, q, test} <= {r[31], r, q};
-        endcase
-        c <= c + 1'b1;
-      end
+    wire [32:0] inv_a;
+    integer i, j;
+
+    assign inv_a = {~a[31], ~a}+1;
+
+    always @(a or b or inv_a) begin
+      test_case[0] = {b[1], b[0], 1'b0};
+      for(i=1; i<counter; i=i+1)
+        test_case[i] = {b[2*i+1], b[2*i], b[2*i-1]};
+      for(i=0; i<counter; i=i+1)
+        begin
+          case(test_case[i])
+            3’b001 , 3’b010 : collection_1[i] = {a[31]], a};
+            3’b011 : collection_1[i] = {a, 1’b0};
+            3’b100 : collection_1[i] = {inv_a[31:0], 1’b0};
+            3’b101 , 3’b110 : collection_1[i] = inv_a;
+            default : collection_1[i] = 0;
+          endcase
+
+          accumulator[i] = $signed (collection_1[i]);
+          for(j=0; j<i; j=j+1)
+            accumulator = {accumulator[i], 2'b00};
+        end
+        product = accumulator[0];
+        for (i=0; i<counter; i=i+1)
+          product = product + accumulator[i];
     end
 
-    alu add (r, m, 1'b0, sum);
-    alu sub (r, ~m, 1'b1, diff);
+    assign hi = product[31:0];
+    assign low = product[63:32];
 
-    assign hi = {r, q};
-    assign low = {r, q};
-    assign busy = {c < 32};
-
-endmodule
-
-//alu para as operações de soma e subtração
-//cin = carry-in
-module alu(
-    input [31:0] a,
-    input [31:0] b,
-    input cin,
-    output [31:0] out
-);
-    assign out = a + b + cin;
 endmodule
