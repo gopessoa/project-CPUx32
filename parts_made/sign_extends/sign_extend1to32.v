@@ -4,5 +4,6 @@ module sign_extend1to32(
 );
 
     assign data_out = (data_in) ? {{31{1'b1}}, data_in} : {{31{1'b0}}, data_in};
+    
 
 endmodule
