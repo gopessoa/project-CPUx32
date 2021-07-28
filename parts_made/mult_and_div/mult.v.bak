@@ -1,54 +1,40 @@
-module mult (
-    input wire [31:0] multiplicand,
-    input wire [31:0] multiplier,
-    input wire clock,
-    input wire start,
+module booth_mult (p, x, y);
+parameter width=32;
+parameter N = ‘width/2;
+input[width-1:0]x, y;
+output[width+width-1:0]p;
+ reg [2:0] cc[N-1:0];
+ reg [width:0] pp[N-1:0];
+ reg [width+width-1:0] spp[N-1:0];
+ reg [width+width-1:0] prod;
+ wire [width:0] inv_x;
+ integer kk,ii;
 
-    output wire [31:0] hi,
-    output wire [31:0] low
+assign inv_x = {~x[width-1],~x}+1;
 
-);
-    // m = multiplicand, q = multiplier, r = result
-    // c = count
-    reg [31:0] m, q, r; 
-    reg [3:0] c;
-    reg test;
-    
-    wire [31:0] sum, diff;
+always @ (x or y or inv_x)
+begin
+ cc[0] = {y[1],y[0],1’b0};
+ for(kk=1;kk<N;kk=kk+1)
+ cc[kk] = {y[2*kk+1],y[2*kk],y[2*kk-1]};
+ for(kk=0;kk<N;kk=kk+1)
+ begin
 
-    always @(posedge clock) begin
-      if (start) begin
-        m <= multiplicand;
-        q <= multiplier;
-        r <= 32'b0;
-        test <= 1'b0;
-        c <= 4'b0;
-      end 
-      else begin
-        case ({q[0], test})
-        2'b0_1 : {r, q, test} <= {sum[31], sum, q};
-        2'b1_0 : {r, q, test} <= {diff[31], diff, q};
-        default: {r, q, test} <= {r[31, r, q]};
-        endcase
-        c <= c + 1'b1;
-      end
-    end
+ case(cc[kk])
+ 3’b001 , 3’b010 : pp[kk] = {x[width-1],x};
+ 3’b011 : pp[kk] = {x,1’b0};
+ 3’b100 : pp[kk] = {inv_x[width-1:0],1’b0};
+ 3’b101 , 3’b110 : pp[kk] = inv_x;
+ default : pp[kk] = 0;
+ endcase
 
-    alu add (r, m, 1'b0, sum);
-    alu sub (r, m, 1'b1, diff);
-
-    assign hi = {r, q};
-    assign low = {c < 8};
-
-endmodule
-
-//alu para as operações de soma e subtração
-//cin = carry-in
-module alu(
-    input cin,
-    input [31:0] a,
-    input [31:0] b,
-    output [31:0] out
-);
-    assign out = a + b + cin;
+ spp[kk] = $signed(pp[kk]);
+ for(ii=0;ii<kk;ii=ii+1)
+    spp[kk] = {spp[kk],2’b00}; //multiply by 2 to the power x or shifting operation
+ end //for(kk=0;kk<N;kk=kk+1)
+ prod = spp[0];
+ for(kk=1;kk<N;kk=kk+1)
+    prod = prod + spp[kk];
+end
+assign p = prod;
 endmodule
