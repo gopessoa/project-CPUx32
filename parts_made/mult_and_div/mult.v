@@ -1,7 +1,7 @@
 module mult (
     input [31:0] a,
     input [31:0] b,
-    input clock;
+    input clock,
     output [31:0] hi,
     output [31:0] low
 );

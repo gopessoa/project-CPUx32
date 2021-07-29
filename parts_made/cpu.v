@@ -68,7 +68,22 @@ module cpu(
     wire [31:0] RegShift_Entrada;
     wire [31:0] RegDesloc_Out;
     wire [31:0] Shift_Left2_32_Out;
+    wire [31:0] Concat_32_out;
+    wire [31:0] Mult_hi_out;
+    wire [31:0] Mult_low_out;
+    wire [31:0] Div_hi_out;
+    wire [31:0] Div_low_out;
+    wire [31:0] mux_hi_out;
+    wire [31:0] mux_low_out;
+    wire [31:0] Reg_Hi_Out;
+    wire [31:0] Reg_Low_Out;
+    wire [31:0] Cause_out;
+    wire [31:0] Reg_Cause_out;
+    
+    wire [27:0] Shift_Left2_26_Out;
 
+    wire [25:0] Concat_25b_out;
+    
     wire [15:0] Instr15_0;
     wire [15:0] MEM_Data_Reg_Out;
     wire [15:0] Mux_ExtendOp_Out;
@@ -235,7 +250,7 @@ module cpu(
         PCSource,
         Result_ULA,
         AluOut_Out,
-        data_2, //ADICIONAR FIO EXCEPTION ADDRESS
+        Concat_32_out,
         EPC_Out,
         Brancher_Out,
         PC_in
@@ -317,5 +332,95 @@ module cpu(
         Shift_Left2_32_Out
     );
 
+    concat25b CONCAT25BITS_(
+        Instr15_0,
+        Instr25_21,
+        Instr20_16,
+        Concat_25b_out
+    );
 
+    shift_left2_26to28 SHIFT_LEFT_26_(
+        Concat_25b_out,
+        Shift_Left2_26_Out
+    );
+
+    concat32b CONCAT32BITS_(
+        PC_out[31:28],
+        Shift_Left2_26_Out,
+        Concat_32_out
+    );
+
+    mux_memToReg MUX_MEM_TO_REG_(
+        MemToReg,
+        MEM_Data_Reg_Out,
+        Sign_extend_out3,
+        Sign_extend_out4,
+        RegDesloc_Out,
+        Menor_Ula_Extend,
+        AluOut_Out,
+        Reg_Hi_Out,
+        Reg_Low_Out,
+        WriteData
+    );
+
+    mult MULT_(
+        A_out,
+        B_out,
+        clk,
+        Mult_hi_out,
+        Mult_low_out
+    );
+
+    div DIV_(
+        clk,
+        rst,
+        A_out,
+        B_out,
+        initDiv,
+        Div_hi_out,
+        Div_low_out
+    );
+
+    mux_Hi MUX_HI_(
+        OPhi,
+        Div_hi_out,
+        Mult_hi_out,
+        mux_hi_out
+    );
+    
+    mux_LOW MUX_LOW_(
+        OPLow,
+        Div_low_out,
+        Mult_low_out,
+        mux_low_out
+    );
+
+    Registrador HI_(
+        clk,
+        reset,
+		HIWrite,
+        mux_hi_out,
+        Reg_Hi_Out
+    );
+
+    Registrador LOW_(
+        clk,
+        reset,
+		LOWrite,
+        mux_low_out,
+        Reg_Low_Out
+    );
+
+    mux_INTCause MUX_INT_CAUSE_(
+        INTCause,
+        Cause_out
+    );
+    
+     Registrador CAUSE(
+        clk,
+        reset,
+		CauseWrite,
+        Cause_out,
+        Reg_Cause_out
+    );
 endmodule
