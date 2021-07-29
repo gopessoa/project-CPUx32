@@ -2,7 +2,7 @@ module cpu(
     input wire clk,
     input wire reset
 );
-// Fios de Controle
+    // Fios de Controle
     wire PC_w; //Adicionado
     wire A_w; //Adicionado
     wire B_w; //Adicionado
@@ -40,7 +40,7 @@ module cpu(
     wire INTCause;
     wire CauseWrite;
 
-// Fios de Dados 
+    // Fios de Dados 
 
     wire [31:0] PC_in;
     wire [31:0] PC_out;
@@ -79,7 +79,7 @@ module cpu(
     wire [31:0] Reg_Low_Out;
     wire [31:0] Cause_out;
     wire [31:0] Reg_Cause_out;
-    
+
     wire [27:0] Shift_Left2_26_Out;
 
     wire [25:0] Concat_25b_out;
@@ -113,7 +113,7 @@ module cpu(
         PC_out,      
         AluOut_Out,
         B_out,
-        data_3, //ADICIONAR FIO
+        data_3, //ADICIONAR FIO EXCEPTION ADDRESS
         A_out
     );
 
@@ -146,7 +146,7 @@ module cpu(
     mux_RegDST MUX_REGDST_(
         RegDst,
         Instr20_16,
-        Instr15_0[15:11], //Verificar se funciona
+        Instr15_0[15:11], 
         WriteReg
     );
 
@@ -195,7 +195,7 @@ module cpu(
 
     mux_ALUsrcA MUX_ALUSRCA_(
         AluSrcA,
-        DATA_0, //ADICIONAR FIO
+        PC_out,
         A_out,
         Data_In_Ula_A
     );
@@ -297,7 +297,7 @@ module cpu(
         MuxShiftQtd,
         MEM_Data_Reg_Out,
         Instr15_0[10:6],
-        data_2, //????????????????????????
+        B_out[4:0],
         RegShift_N
     );
     
