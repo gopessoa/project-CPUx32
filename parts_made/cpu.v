@@ -113,7 +113,7 @@ module cpu(
         PC_out,      
         AluOut_Out,
         B_out,
-        data_3, //ADICIONAR FIO EXCEPTION ADDRESS
+        ExceptionAddress,
         A_out
     );
 
@@ -423,4 +423,12 @@ module cpu(
         Cause_out,
         Reg_Cause_out
     );
+
+    and_or AND_OR_(
+        Zero_ULA,
+        PCWriteCond,
+        PCWrite,
+        PC_w
+    );
+
 endmodule
