@@ -108,6 +108,8 @@ module cpu(
         Instr15_0[5:0],
         B_out,
         Overflow_ULA
+
+        //outputs
     );
 
     Registrador PC_(

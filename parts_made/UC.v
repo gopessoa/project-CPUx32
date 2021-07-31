@@ -5,131 +5,134 @@ module UC(
     input wire clk,
     input wire reset,
     //opcode da instrução
-    input wire Opcode,          //  -->     undefOPcode exception
+    input wire [5:0] Opcode,          //  -->     undefOPcode exception
+    input wire [5:0] Funct,
     //flags
     input wire [31:0] Bvalue,   //  -->     divByZero exception if(B == 0)
     input wire overflow,        //  -->     overflow exception para adição
-    input wire overflow2,       //  -->     pverflow exception para multiplicação
+    //input wire undef opcode 
 
-//OUTPUTS
-    output wire A_w;
-    output wire B_w;
-    output wire WDMux;
-    output wire MemDataRegLoad;
-    output wire PCWrite,
-    output wire PCWriteCond,
-    output wire PCSource,
-    output wire IorD,
-    output wire MemReadOrWrite,
-    output wire IRWrite,
-    output wire RegDst,
-    output wire RegWrite,
-    output wire MemToReg,
-    output wire LoadAMem,
-    output wire LoadBMem,
-    output wire AluSrcA,
-    output wire AluSrcB,
-    output wire AluOp,
-    output wire AluOutWrite,
-    output wire EPCWrite,
-    output wire BranchOp,
-    output wire MuxShiftQtd,
-    output wire MuxShiftInput,
-    output wire OPLow,
-    output wire OPhi,
-    output wire MuxBH,
-    output wire ExtendOP,
-    output wire ExceptionAddress,
-    output wire initDiv,
-    output wire initMult,
-    output wire HIWrite,
-    output wire LOWrite,
-    output wire Shift,
+    //OUTPUTS
+    //MUX
+    output reg A_w;
+    output reg B_w;
+    output reg WDMux;
+    output reg MemDataRegLoad; //???
+    output reg PCWrite,
+    output reg PCWriteCond,
+    output reg [2:0] PCSource,
+    output reg [2:0] IorD,
+    output reg MemReadOrWrite, 
+    output reg IRWrite,
+    output reg [2:0] RegDst,
+    output reg RegWrite,
+    output reg [3:0] MemToReg,
+    output reg LoadAMem,
+    output reg LoadBMem,
+    output reg AluSrcA,
+    output reg [1:0] AluSrcB,
+    output reg [2:0] AluOp,
+    output reg AluOutWrite,
+    output reg EPCWrite,
+    output reg [2:0 ] BranchOp,
+    output reg [2:0] MuxShiftQtd,
+    output reg [2:0] MuxShiftInput,
+    output reg OPLow,
+    output reg OPhi, 
+    output reg MuxBH,
+    output reg ExtendOP,
+    output wire ExceptionAddress, //???
+    output reg initDiv,
+    output reg initMult,
+    output reg HIWrite, 
+    output reg LOWrite,
+    output reg [2:0] Shift,
 
-    output wire INTCause,
-    output wire CauseWrite
+    output wire INTCause, //???
+    output wire CauseWrite //???
+
 );
 
 //variáveis
-reg [1:0]   ESTADO;
+reg [6:0]   ESTADO;
 reg [2:0]   CONTADOR;
 
 //CONSTANTES
     //ESTADOS PRINCIPAIS
-    parameter E_RESET           = 0;
-    parameter E_FETCH           = 1;
-    parameter FETCH_2           = 2;
-    parameter FETCH_3           = 3;
-    parameter DECODE            = 4;
-    parameter DECODE_2          = 5;
-    parameter WAIT              = 6;
+    parameter RESET           = 7'b0000000; // 0
+    parameter FETCH           = 7'b0000001; // 1
+    parameter FETCH_2           = 7'b0000010; // 2
+    parameter FETCH_3           = 7'b0000011; // 3
+    parameter DECODE            = 7'b0000100; // 4 
+    parameter DECODE_2          = 7'b0000101; // 5
+    parameter WAIT              = 7'b0000110; // 6
     //ESTADOS DE FORMATO R
-    parameter ADD               = 7;
-    parameter SUB               = 8;
-    parameter AND               = 9;
-    parameter ALU_TO_REG        = 10;
-    parameter MULT_1            = 11;
-    parameter MULT_2            = 12;
-    parameter DIV_1             = 13;
-    parameter DIV_2             = 14;
-    parameter MFHI              = 15;
-    parameter MFLO              = 16; 
-    parameter SHIFT_SHAMT       = 17;
-    parameter SLL               = 18;
-    parameter SRL               = 19;
-    parameter SRA               = 20;
-    parameter SHIFT_REG         = 21;
-    parameter SRAV              = 22;
-    parameter SLLV              = 23;
-    parameter STORE_SHIFT       = 24;
-    parameter JR                = 25;
-    parameter SLT_1             = 26;
-    parameter SLT_2             = 27;
-    parameter BREAK_1           = 28;
-    parameter BREAK_2           = 29;
-    parameter RTE               = 30;
-    parameter ADDM_1            = 31;
-    parameter ADDM_2            = 32;
-    parameter ADDM_3            = 33;
-    parameter ADDM_4            = 34;
-    parameter ADDM_5            = 35;
-    parameter ADDM_6            = 36;
+    parameter ADD               = 7'b0000111; // 7
+    parameter SUB               = 7'b0001000; // 8
+    parameter AND               = 7'b0001001; // 9
+    parameter ALU_TO_REG        = 7'b0001010; // 10
+    parameter MULT_1            = 7'b0001011; // 11
+    parameter MULT_2            = 7'b0001100; // 12
+    parameter DIV_1             = 7'b0001101; // 13
+    parameter DIV_2             = 7'b0001110; // 14
+    parameter MFHI              = 7'b0001111; // 15
+    parameter MFLO              = 7'b0010000; // 16
+    parameter SHIFT_SHAMT       = 7'b0010001; // 17
+    parameter SLL               = 7'b0010010; // 18
+    parameter SRL               = 7'b0010011; // 19
+    parameter SRA               = 7'b0010100; // 20
+    parameter SHIFT_REG         = 7'b0010101; // 21
+    parameter SRAV              = 7'b0010110; // 22
+    parameter SLLV              = 7'b0010111; // 23
+    parameter STORE_SHIFT       = 7'b0011000; // 24
+    parameter JR                = 7'b0011001; // 25
+    parameter SLT_1             = 7'b0011010; // 26
+    parameter SLT_2             = 7'b0011011; // 27
+    parameter BREAK_1           = 7'b0011100; // 28
+    parameter BREAK_2           = 7'b0011101; // 29
+    parameter RTE               = 7'b0011110; // 30
+    parameter ADDM_1            = 7'b0011111; // 31
+    parameter ADDM_2            = 7'b0100000; // 32
+    parameter ADDM_3            = 7'b0100001; // 33
+    parameter ADDM_4            = 7'b0100010; // 34
+    parameter ADDM_5            = 7'b0100011; // 35
+    parameter ADDM_6            = 7'b0100100; // 36
     //ESTADOS DO FORMATO J
-    parameter J                 = 37;
-    parameter JAL_1             = 38;
-    parameter JAL_2             = 39;
-    parameter JAL_3             = 40;
+    parameter J                 = 7'b0100101; // 37
+    parameter JAL_1             = 7'b0100110; // 38
+    parameter JAL_2             = 7'b0100111; // 39
+    parameter JAL_3             = 7'b0101000; // 40
     //ESTADOS DO FORMATO I
-    parameter ADDI_ADDIU        = 41;
-    parameter ADDI              = 42;
-    parameter ADDIU             = 43;
-    parameter BEQ_BNE_BGT_BLE   = 44;
-    parameter BEQ               = 45;
-    parameter BNE               = 46;
-    parameter BGT               = 47;
-    parameter BLE               = 48;
-    parameter LB_LH_LW          = 49;
-    parameter LB                = 50;
-    parameter LH                = 51;
-    parameter LW                = 52;
-    parameter SB_SH_SW          = 53;
-    parameter SB                = 54;
-    parameter SH                = 55;
-    parameter SW                = 56;
-    parameter LUI               = 57;
-    parameter SLTI_1            = 58;
-    parameter SLTI_2            = 59;
-    parameter SLLM_1            = 60;
-    parameter SLLM_2            = 61;
-    parameter SLLM_3            = 62;
+    parameter ADDI_ADDIU        = 7'b0101001; // 41
+    parameter ADDI              = 7'b0101010; // 42
+    parameter ADDIU             = 7'b0101011; // 43
+    parameter BEQ_BNE_BGT_BLE   = 7'b0101100; // 44
+    parameter BEQ               = 7'b0101101; // 45
+    parameter BNE               = 7'b0101110; // 46
+    parameter BGT               = 7'b0101111; // 47
+    parameter BLE               = 7'b0110000; // 48
+    parameter LB_LH_LW          = 7'b0110001; // 49
+    parameter LB                = 7'b0110010; // 50
+    parameter LH                = 7'b0110011; // 51
+    parameter LW                = 7'b0110100; // 52
+    parameter SB_SH_SW          = 7'b0110101; // 53
+    parameter SB                = 7'b0110110; // 54
+    parameter SH                = 7'b0110111; // 55
+    parameter SW                = 7'b0111000; // 56
+    parameter LUI               = 7'b0111001; // 57
+    parameter SLTI_1            = 7'b0111010; // 58
+    parameter SLTI_2            = 7'b0111011; // 59
+    parameter SLLM_1            = 7'b0111100; // 60
+    parameter SLLM_2            = 7'b0111101; // 61
+    parameter SLLM_3            = 7'b0111110; // 62
     //ESTADOS DE EXCEPTIONS
-    parameter UNDEF_OP          = 63;
-    parameter OVERFLOW          = 64;
-    parameter DIV_BY_ZERO       = 65;
-    parameter LOAD_EXP_TO_PC_1  = 66;
-    parameter LOAD_EXP_TO_PC_1  = 67;
+    parameter UNDEF_OP          = 7'b0111111; // 63
+    parameter OVERFLOW          = 7'b1000000; // 64
+    parameter DIV_BY_ZERO       = 7'b1000001; // 65
+    parameter LOAD_EXP_TO_PC_1  = 7'b1000010; // 66
+    parameter LOAD_EXP_TO_PC_1  = 7'b1000011; // 67
     //LOCK WRITE
-    parameter LOCK_WRITE        = 68;
+    parameter LOCK_WRITE        = 7'b1000100; // 68
 
 
 
@@ -181,4 +184,248 @@ reg [2:0]   CONTADOR;
     parameter OP_J             =   6'b000010;  //  0x2 = 2
     parameter OP_JAL           =   6'b000011;  //  0x3 = 3
 
+    initial begin
+      ESTADO = RESET
+    end
+
+    always @(posedge clk) begin
+      if (reset == 1'b1) begin
+        RegDst = 3'b010;
+        MemToReg = 4'b1000;
+        RegWrite = 1'b1;
+
+        A_w = 1'b0;
+        B_w = 1'b0;
+        HIWrite = 1'b0;
+        LOWrite = 1'b0;
+        PCWrite = 1'b0;
+        MemReadOrWrite = 1'b0;
+        IRWrite = 1'b0;
+        BranchOp = 3'b000;
+      end else begin
+        case(ESTADO)
+        FETCH: begin
+          AluSrcA = 1'b0;
+          AluSrcB = 2'b01;
+          AluOP = 3'b001;
+          AluOutWrite = 1'b1;
+          IorD = 3'b000;
+
+          //resto
+
+          //NEXT STATE
+          ESTADO = FETCH_2;
+        end
+        FETCH_2: begin
+           PCSource = 3'b000;
+           PCWrite = 1'b1;
+
+           //resto
+
+           //next stage
+           ESTADO = FETCH_3;
+        end
+        FETCH_3: begin
+           PCWrite = 1'b0;
+           MemReadOrWrite = 1'b0;
+
+            //resto
+
+            //next stage
+            ESTADO = DECODE;
+        end
+        DECODE: begin
+          AluSrcA = 1'b0;
+          AluSrcB = 2'b10;
+          AluOP = 3'b001;
+          IRWrite = 1'b0;
+
+          //resto
+
+          //next state
+          ESTADO = DECODE_2;
+        end
+        DECODE_2: begin
+          AluOutWrite = 1'b1;
+          RegWrite = 1'b1;
+          LoadAMem = 1'b0;
+          LoadBMem = 2'b00;
+          A_w = 1'b1;
+          B_w = 1'b1;
+
+          //resto
+
+          //next state
+           case(Opcode) begin
+            //INTRUÇÕES EM R
+            OP_R: begin
+            case(Funct) begin
+                FUNCT_ADD: begin
+                  ESTADO = ADD;
+                end
+                FUNCT_AND: begin
+                  ESTADO = AND;
+                end
+                FUNCT_DIV: begin
+                  ESTADO = ALU_TO_REG;
+                end
+                FUNCT_MULT: begin
+                  ESTADO = MULT_1;
+                end
+                FUNCT_JR: begin
+                  ESTADO = JR;
+                end
+                FUNCT_MFHI: begin
+                  ESTADO = MFHI;
+                end
+                FUNCT_MFLO: begin
+                  ESTADO = MFLO;
+                end
+                FUNCT_SLL: begin
+                  ESTADO = SLL;
+                end
+                FUNCT_SLLV: begin
+                  ESTADO = SLLV;
+                end
+                FUNCT_SLT: begin
+                  ESTADO = SLT;
+                end
+                FUNCT_SRA: begin
+                  ESTADO = SRA;
+                end
+                FUNCT_SRAV: begin
+                  ESTADO = SRAV;
+                end
+                FUNCT_SRL: begin
+                  ESTADO = SRL;
+                end
+                FUNCT_SUB: begin
+                  ESTADO = SUB;
+                end
+                FUNCT_BREAK: begin
+                  ESTADO = BREAK;
+                end
+                FUNCT_RTE: begin
+                  ESTADO = RTE;
+                end
+                FUNCT_ADDM: begin
+                  ESTADO = ADDM_1;
+                end
+            endcase
+            //INSTRUÇÕES I
+            OP_ADDI: begin
+              ESTADO = ADDI_ADDIU;
+            end
+            OP_ADDIU: begin
+              ESTADO = ADDI_ADDIU;
+            end
+            OP_BEQ: begin
+              ESTADO: BEQ_BNE_BGT_BLE;
+            end
+            OP_BNE: begin
+              ESTADO: BEQ_BNE_BGT_BLE;
+            end
+            OP_BLE: begin
+              ESTADO: BEQ_BNE_BGT_BLE;
+            end
+            OP_BGT: begin
+              ESTADO: BEQ_BNE_BGT_BLE;
+            end
+            OP_SLLM: begin
+              ESTADO = SLLM_1;
+            end
+            OP_SLTI: begin
+              ESTADO = SLTI_1;
+            end
+            OP_LUI: begin
+              ESTADO = LUI;
+            end
+            OP_SB: begin
+              ESTADO = SB_SH_SW;
+            end
+            OP_SH: begin
+              ESTADO = SB_SH_SW;
+            end
+            OP_SW: begin
+              ESTADO = SB_SH_SW;
+            end
+            OP_LB:begin
+              ESTADO = LB_LH_LW;
+            end
+            OP_LH:begin
+              ESTADO = LB_LH_LW;
+            end
+            OP_LW:begin
+              ESTADO = LB_LH_LW;
+            end
+        
+            //INSTRUÇÕES J
+            OP_J: begin
+              ESTADO = J
+            end
+            OP_JAL: begin
+              ESTADO = JAL_1;
+            end    
+           endcase
+        end
+        ADD: begin
+          AluSrcA = 1'b1;
+          AluSrcB = 2'b00;
+          AluOP = 3'b001;
+          AluOutWrite = 1;
+          
+          //resto
+
+          //next stage
+          if (overflow) begin
+            ESTADO = OVERFLOW;
+          end else begin
+             ESTADO = ALU_TO_REG;
+          end
+        end
+        SUB: begin
+          AluSrcA = 1'b1;
+          AluSrcB = 2'b00;
+          AluOP = 3'b010;
+          AluOutWrite = 1;
+          
+          //resto
+
+          //next stage
+           if (overflow) begin
+            ESTADO = OVERFLOW;
+          end else begin
+             ESTADO = ALU_TO_REG;
+          end
+        end
+        AND: begin
+          AluSrcA = 1'b1;
+          AluSrcB = 2'b00;
+          AluOP = 3'b011;
+          AluOutWrite = 1;
+          
+          //resto
+
+          //next stage
+          ESTADO = ALU_TO_REG;
+        end
+        ALU_TO_REG: begin
+          MemToReg = 4'b0101;
+          RegWrite = 1'b1;
+          RegDst = 1'b1;
+
+          //resto
+
+          //NEXT STATE
+          ESTADO = LOCK_WRITE;
+        end
+        MULT_1: begin
+          initMult = 1'b1; 
+
+          //resto 
+
+          //next state
+          ESTADO
+        end
+    end
 endmodule
