@@ -1,6 +1,6 @@
 module UC(
 
-//INPUTS
+    //INPUTS
     //utils
     input wire clk,
     input wire reset,
@@ -42,8 +42,7 @@ module UC(
     output reg MuxBH,
     output reg ExtendOP,
     output reg [7:0] ExceptionAddress, //???
-    output reg initDiv,
-    output reg initMult,
+
     output reg HIWrite, 
     output reg LOWrite,
     output reg [2:0] Shift,

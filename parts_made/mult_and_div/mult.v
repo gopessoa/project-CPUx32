@@ -42,5 +42,5 @@ module mult (
 
     assign hi = product[31:0];
     assign low = product[63:32];
-    assign busy = 1'b0;
+
 endmodule

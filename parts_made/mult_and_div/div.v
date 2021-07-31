@@ -65,5 +65,4 @@ module div
     assign hi = quotient[32];
     assign low = dvnd[32];
 
-
 endmodule
