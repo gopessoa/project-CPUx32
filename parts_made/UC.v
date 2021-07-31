@@ -41,7 +41,7 @@ module UC(
     output reg OPhi, 
     output reg MuxBH,
     output reg ExtendOP,
-    output reg ExceptionAddress, //???
+    output reg [7:0] ExceptionAddress, //???
     output reg initDiv,
     output reg initMult,
     output reg HIWrite, 
@@ -126,11 +126,11 @@ reg [2:0]   CONTADOR;
     parameter SLLM_2            = 7'b0111101; // 61 ok
     parameter SLLM_3            = 7'b0111110; // 62 ok
     //ESTADOS DE EXCEPTIONS
-    parameter UNDEF_OP          = 7'b0111111; // 63
-    parameter OVERFLOW          = 7'b1000000; // 64
-    parameter DIV_BY_ZERO       = 7'b1000001; // 65
-    parameter LOAD_EXP_TO_PC_1  = 7'b1000010; // 66
-    parameter LOAD_EXP_TO_PC_2  = 7'b1000011; // 67
+    parameter UNDEF_OP          = 7'b0111111; // 63 O
+    parameter OVERFLOW          = 7'b1000000; // 64 OK
+    parameter DIV_BY_ZERO       = 7'b1000001; // 65 OK
+    parameter LOAD_EXP_TO_PC_1  = 7'b1000010; // 66 OK
+    parameter LOAD_EXP_TO_PC_2  = 7'b1000011; // 67 OK
     //LOCK WRITE
     parameter LOCK_WRITE        = 7'b1000100; // 68 ok
 
@@ -1917,6 +1917,69 @@ reg [2:0]   CONTADOR;
                 //next state
                 ESTADO = FETCH;
               end
+              UNDEF_OP: begin
+                AluSrcA = 1'b0;
+                AluSrcB = 1'b1;
+                AluOP = 3'b010;
+                EPCWrite = 1'b1;
+                ExceptionAddress = 8'b11111101;
+                IorD = 3'b011;
+                MemReadOrWrite = 1'b1;
+
+                //resto
+
+                //next state
+                ESTADO = LOAD_EXP_TO_PC_1;
+              end
+              OVERFLOW: begin
+                AluSrcA = 1'b0;
+                AluSrcB = 1'b1;
+                AluOP = 3'b010;
+                EPCWrite = 1'b1;
+                ExceptionAddress = 8'b11111110;
+                IorD = 3'b011;
+                MemReadOrWrite = 1'b1;
+
+                //resto
+
+                //next state
+                ESTADO = LOAD_EXP_TO_PC_1;
+              end
+              DIV_BY_ZERO: begin
+                AluSrcA = 1'b0;
+                AluSrcB = 1'b1;
+                AluOP = 3'b010;
+                EPCWrite = 1'b1;
+                ExceptionAddress = 8'b11111111;
+                IorD = 3'b011;
+                MemReadOrWrite = 1'b1;
+
+                //resto
+
+                //next state
+                ESTADO = LOAD_EXP_TO_PC_1;
+              end
+              LOAD_EXP_TO_PC_1: begin
+                LoadAMem = 1'b1;
+                A_w = 1'b1;
+
+                //resto
+
+                //next state
+                ESTADO = LOAD_EXP_TO_PC_2;
+              end
+              LOAD_EXP_TO_PC_2: begin
+                AluSrcA = 1'b0;
+                AluSrcB = 1'b1;
+                PCSource = 3'b000;
+                PCWrite = 1'b1;
+
+                //resto
+
+                //next state
+                ESTADO = FETCH;
+              end
+              
         endcase // ESTADO
       end //else
     end // wlways
