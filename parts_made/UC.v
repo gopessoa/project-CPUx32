@@ -16,7 +16,7 @@ module UC(
     //MUX
     output reg A_w,
     output reg B_w,
-    output reg WDMux,
+    output reg WDMux = 1'b0,
     output reg MemDataRegLoad, //???
     output reg PCWrite,
     output reg PCWriteCond,
@@ -190,10 +190,12 @@ reg [2:0]   CONTADOR;
 
     always @(posedge clk) begin
       if (reset == 1'b1) begin
+        //USADOS
         RegDst = 3'b010;
         MemToReg = 4'b1000;
         RegWrite = 1'b1;
-
+        
+        //NÃO USADOS
         A_w = 1'b0;
         B_w = 1'b0;
         MemDataRegLoad = 1'b0;
@@ -208,46 +210,94 @@ reg [2:0]   CONTADOR;
         HIWrite = 1'b0;
         LOWrite = 1'b0;
         CauseWrite = 1'b0;// ?
+        WDMux = 1'b0;
+        PCSource = 3'b000;
+        IorD = 3'b000;
+        RegDst = 3'b000;
+        RegWrite = 1'b0;
+        MemToReg = 4'b0000;
+        LoadAMem = 1'b0;
+        LoadBMem = 1'b0;
+        AluSrcA = 1'b0;
+        AluSrcB = 2'b00;
+        AluOP = 3'b000;
+        BranchOp = 2'b00;
+        MuxShiftQtd = 2'b00;
+        MuxShiftInput = 2'b00;
+        OPlow = 1'b0;
+        OPhi = 1'b0; 
+        MuxBH = 1'b0;
+        ExtendOP = 1'b0;
+        ExceptionAddress = 8'b00000000;
+         
+        
+        Shift = 3'b000;
+        INTCause = 1'b0; 
+        
       end else begin
         case(ESTADO)
           FETCH: begin
+            //USADOS
             AluSrcA = 1'b0;
             AluSrcB = 2'b01;
             AluOP = 3'b001;
             AluOutWrite = 1'b1;
             IorD = 3'b000;
+            MemReadOrWrite = 1'b1;
 
-            //resto
+            //NÃO USADOS
             A_w = 1'b0;
             B_w = 1'b0;
-            MemDataRegLoad = 1'b0; 
+            MemDataRegLoad = 1'b0;
             PCWrite = 1'b0; 
             PCWriteCond = 1'b0;// ?
-            MemReadOrWrite = 1'b0;
             IRWrite = 1 'b0;
-            RegWrite = 1'b0;
+            AluOutWrite = 1'b0;
             EPCWrite = 1'b0;
             initDiv = 1'b0;// ?
             initMult = 1'b0;// ?
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
+            WDMux = 1'b0;
+            PCSource = 3'b000;
+            IorD = 3'b000;
+            RegDst = 3'b000;
+            RegWrite = 1'b0;
+            MemToReg = 4'b0000;
+            LoadAMem = 1'b0;
+            LoadBMem = 1'b0;
+            AluSrcA = 1'b0;
+            AluSrcB = 2'b00;
+            AluOP = 3'b000;
+            BranchOp = 2'b00;
+            MuxShiftQtd = 2'b00;
+            MuxShiftInput = 2'b00;
+            OPlow = 1'b0;
+            OPhi = 1'b0; 
+            MuxBH = 1'b0;
+            ExtendOP = 1'b0;
+            ExceptionAddress = 8'b00000000;
+             
+            
+            Shift = 3'b000;
+            INTCause = 1'b0;
 
             //NEXT STATE
             ESTADO = FETCH_2;
           end
           FETCH_2: begin
+            //USADOS
             PCSource = 3'b000;
             PCWrite = 1'b1;
 
-            //resto
+            //NÃO USADOS
             A_w = 1'b0;
             B_w = 1'b0;
-            MemDataRegLoad = 1'b0; 
+            MemDataRegLoad = 1'b0;
             PCWriteCond = 1'b0;// ?
             MemReadOrWrite = 1'b0;
             IRWrite = 1 'b0;
-            RegWrite = 1'b0;
             AluOutWrite = 1'b0;
             EPCWrite = 1'b0;
             initDiv = 1'b0;// ?
@@ -255,21 +305,43 @@ reg [2:0]   CONTADOR;
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
+            WDMux = 1'b0;
+            IorD = 3'b000;
+            RegDst = 3'b000;
+            RegWrite = 1'b0;
+            MemToReg = 4'b0000;
+            LoadAMem = 1'b0;
+            LoadBMem = 1'b0;
+            AluSrcA = 1'b0;
+            AluSrcB = 2'b00;
+            AluOP = 3'b000;
+            BranchOp = 2'b00;
+            MuxShiftQtd = 2'b00;
+            MuxShiftInput = 2'b00;
+            OPlow = 1'b0;
+            OPhi = 1'b0; 
+            MuxBH = 1'b0;
+            ExtendOP = 1'b0;
+            ExceptionAddress = 8'b00000000;
+             
+            
+            Shift = 3'b000;
+            INTCause = 1'b0;
 
             //next stage
             ESTADO = FETCH_3;
           end
           FETCH_3: begin
+            //USADOS
             PCWrite = 1'b0;
             MemReadOrWrite = 1'b0;
+            IRWrite = 1'b1;
 
-            //resto
+            //NÃO USADOS
             A_w = 1'b0;
             B_w = 1'b0;
             MemDataRegLoad = 1'b0;
             PCWriteCond = 1'b0;// ?
-            IRWrite = 1 'b0;
-            RegWrite = 1'b0;
             AluOutWrite = 1'b0;
             EPCWrite = 1'b0;
             initDiv = 1'b0;// ?
@@ -277,24 +349,47 @@ reg [2:0]   CONTADOR;
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
+            WDMux = 1'b0;
+            PCSource = 3'b000;
+            IorD = 3'b000;
+            RegDst = 3'b000;
+            RegWrite = 1'b0;
+            MemToReg = 4'b0000;
+            LoadAMem = 1'b0;
+            LoadBMem = 1'b0;
+            AluSrcA = 1'b0;
+            AluSrcB = 2'b00;
+            AluOP = 3'b000;
+            BranchOp = 2'b00;
+            MuxShiftQtd = 2'b00;
+            MuxShiftInput = 2'b00;
+            OPlow = 1'b0;
+            OPhi = 1'b0; 
+            MuxBH = 1'b0;
+            ExtendOP = 1'b0;
+            ExceptionAddress = 8'b00000000;
+             
+            
+            Shift = 3'b000;
+            INTCause = 1'b0;
 
             //next stage
             ESTADO = DECODE;
           end
           DECODE: begin
+            //USADOS
             AluSrcA = 1'b0;
             AluSrcB = 2'b10;
             AluOP = 3'b001;
             IRWrite = 1'b0;
 
-            //resto
+            //NÃO USADOS
             A_w = 1'b0;
             B_w = 1'b0;
             MemDataRegLoad = 1'b0;
             PCWrite = 1'b0; 
             PCWriteCond = 1'b0;// ?
             MemReadOrWrite = 1'b0;
-            RegWrite = 1'b0;
             AluOutWrite = 1'b0;
             EPCWrite = 1'b0;
             initDiv = 1'b0;// ?
@@ -302,11 +397,32 @@ reg [2:0]   CONTADOR;
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
+            WDMux = 1'b0;
+            PCSource = 3'b000;
+            IorD = 3'b000;
+            RegDst = 3'b000;
+            RegWrite = 1'b0;
+            MemToReg = 4'b0000;
+            LoadAMem = 1'b0;
+            LoadBMem = 1'b0;
+            BranchOp = 2'b00;
+            MuxShiftQtd = 2'b00;
+            MuxShiftInput = 2'b00;
+            OPlow = 1'b0;
+            OPhi = 1'b0; 
+            MuxBH = 1'b0;
+            ExtendOP = 1'b0;
+            ExceptionAddress = 8'b00000000;
+             
+            
+            Shift = 3'b000;
+            INTCause = 1'b0;
 
             //next state
             ESTADO = DECODE_2;
           end
           DECODE_2: begin
+            //USADOS
             AluOutWrite = 1'b1;
             RegWrite = 1'b1;
             LoadAMem = 1'b0;
@@ -314,7 +430,7 @@ reg [2:0]   CONTADOR;
             A_w = 1'b1;
             B_w = 1'b1;
 
-            //resto
+            //NÃO USADOS
             MemDataRegLoad = 1'b0;
             PCWrite = 1'b0; 
             PCWriteCond = 1'b0;// ?
@@ -326,6 +442,26 @@ reg [2:0]   CONTADOR;
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
+            WDMux = 1'b0;
+            PCSource = 3'b000;
+            IorD = 3'b000;
+            RegDst = 3'b000;
+            MemToReg = 4'b0000;
+            AluSrcA = 1'b0;
+            AluSrcB = 2'b00;
+            AluOP = 3'b000;
+            BranchOp = 2'b00;
+            MuxShiftQtd = 2'b00;
+            MuxShiftInput = 2'b00;
+            OPlow = 1'b0;
+            OPhi = 1'b0; 
+            MuxBH = 1'b0;
+            ExtendOP = 1'b0;
+            ExceptionAddress = 8'b00000000;
+             
+            
+            Shift = 3'b000;
+            INTCause = 1'b0;
 
             //next state
 
@@ -444,1542 +580,2796 @@ reg [2:0]   CONTADOR;
                 endcase //opcode
             end //decode 2    
               //ESTADOS DAS INSTRUÇÕES R
-              ADD: begin
-                AluSrcA = 1'b1;
-                AluSrcB = 2'b00;
-                AluOP = 3'b001;
-                AluOutWrite = 1;
-                
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
+            ADD: begin
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b00;
+              AluOP = 3'b001;
+              AluOutWrite = 1;
+              
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
 
-                //next stage
-                if (OVERFLOW) begin
-                  ESTADO = OVERFLOW;
-                end else begin
-                  ESTADO = ALU_TO_REG;
-                end
-              end
-              SUB: begin
-                AluSrcA = 1'b1;
-                AluSrcB = 2'b00;
-                AluOP = 3'b010;
-                AluOutWrite = 1;
-                
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next stage
-                if (OVERFLOW) begin
-                  ESTADO = OVERFLOW;
-                end else begin
-                  ESTADO = ALU_TO_REG;
-                end
-              end
-              AND: begin
-                AluSrcA = 1'b1;
-                AluSrcB = 2'b00;
-                AluOP = 3'b011;
-                AluOutWrite = 1;
-                
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next stage
+              //next stage
+              if (OVERFLOW) begin
+                ESTADO = OVERFLOW;
+              end else begin
                 ESTADO = ALU_TO_REG;
               end
-              ALU_TO_REG: begin
-                MemToReg = 4'b0101;
-                RegWrite = 1'b1;
-                RegDst = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //NEXT STATE
-                ESTADO = LOCK_WRITE;
-              end
-              MULT_1: begin
-                initMult = 1'b1; 
-
-                //resto 
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = MULT_2;
-              end
-              MULT_2: begin
-                OPhi = 1'b1;
-                OPlow = 1'b1;
-                HIWrite = 1'b1;
-                LOWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              DIV_1: begin
-                initDiv = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0;
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = DIV_2;
-              end
-              DIV_2: begin
-                OPhi = 1'b0;
-                OPlow = 1'b0;
-                HIWrite = 1'b1;
-                LOWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                if (Bvalue == 32'b00000000000000000000000000000000) begin
-                  ESTADO = DIV_BY_ZERO;
-                end else begin
-                  ESTADO = LOCK_WRITE;
-                end
-              end
-              MFHI: begin
-                MemToReg = 4'b0110;
-                RegDst = 1'b1;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0;
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              MFLO: begin
-                MemToReg = 4'b0111;
-                RegDst = 1'b1;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ? 
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              SHIFT_SHAMT: begin
-                MuxShiftInput = 2'b00;
-                MuxShiftQtd = 2'b01;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                if (Funct == FUNCT_SLL) begin
-                    ESTADO = SLL;
-                end
-                if (Funct == FUNCT_SRL) begin
-                    ESTADO = SRL;
-                end
-                if (Funct == FUNCT_SRA) begin
-                    ESTADO = SRA;
-                end
-              end
-
-              SLL: begin
-                Shift = 3'b010;
-
-                //RESTO
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //NEXT STATE
-                ESTADO = STORE_SHIFT;
-              end
-              SRL: begin
-                Shift = 3'b100;
-
-                //RESTO
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0;
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //NEXT STATE
-                ESTADO = STORE_SHIFT;
-              end
-              SRA: begin
-                Shift = 3'b011;
-
-                //RESTO
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0;
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //NEXT STATE
-                ESTADO = STORE_SHIFT;
-              end
-              SHIFT_REG: begin
-                MuxShiftInput = 2'b01;
-                MuxShiftQtd = 2'b10;
-                Shift = 3'b001;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                if (Funct == FUNCT_SLLV) begin
-                    ESTADO = SLLV;
-                end
-                if (Funct == FUNCT_SRAV) begin
-                    ESTADO = SRAV;
-                end
-              end
-              SRAV: begin
-                Shift = 3'b100;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = STORE_SHIFT;
-              end
-              SLLV: begin
-                Shift = 3'b010;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = STORE_SHIFT;
-              end
-              STORE_SHIFT: begin
-                MemToReg = 4'b0011;
-                RegWrite = 1'b1;
-                RegDst = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              JR: begin
-                AluSrcA = 1'b1;
-                AluOP = 3'b000;
-                PCSource = 3'b000;
-                PCWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              SLT_1: begin
-                AluSrcA = 1'b0;
-                AluSrcB = 1'b0;
-                AluOP = 3'b111;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = SLT_2;
-              end
-              SLT_2: begin
-                MemToReg = 4'b0100;
-                RegWrite = 1'b1;
-                RegDst = 1'b1;
-
-                //RESTO
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //NEXT STATE
-                ESTADO = LOCK_WRITE;
-              end
-              BREAK_1: begin
-                AluSrcA = 1'b0;
-                AluSrcB = 1'b1;
-                AluOP = 3'b010;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = BREAK_2;
-              end
-              BREAK_2: begin
-                PCSource = 3'b000;
-                PCWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              RTE: begin
-                PCSource = 3'b100;
-                PCWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              ADDM_1: begin
-                IorD = 3'b100;
-                MemReadOrWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = ADDM_2;
-              end
-              ADDM_2: begin
-                LoadAMem = 1'b1;
-                A_w = 1'b1;
-
-                //resto
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = ADDM_2;
-              end
-              ADDM_3: begin
-                IorD = 3'b010;
-                MemReadOrWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = ADDM_4;
-              end
-              ADDM_4: begin
-                LoadBMem = 1'b1;
-                B_w = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                MemDataRegLoad = 1'b0;
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = ADDM_5;
-              end
-              ADDM_5: begin
-                AluSrcA = 1'b1;
-                AluSrcB = 2'b00;
-                AluOP = 3'b001;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = ADDM_6;
-              end
-              ADDM_6: begin
-                AluOutWrite = 1'b1;
-                MemToReg = 3'b101;
-                RegDst = 1'b1;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
+            end
+            SUB: begin
+              //USADOS
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b00;
+              AluOP = 3'b010;
+              AluOutWrite = 1;
+                
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
               
-              //ESTADOS INSTRUÇÕES I
-              ADDI_ADDIU: begin
-                ExtendOP = 1'b1;
-                AluSrcB = 2'b11;
-                AluSrcA = 1'b1;
-                AluOP = 3'b001;
-                AluOutWrite = 1'b1;
+              Shift = 3'b000;
+              INTCause = 1'b0;
 
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                if(Opcode == OP_ADDI) begin
-                  ESTADO = ADDI;
-                end 
-                else begin
-                  ESTADO = ADDIU;
-                end
+              //next stage
+              if (OVERFLOW) begin
+                ESTADO = OVERFLOW;
+              end else begin
+                ESTADO = ALU_TO_REG;
               end
-              ADDI: begin
-                MemToReg = 4'b0101;
-                RegDst = 2'b00;
-                RegWrite = 1'b1;
-
-                //resto 
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                if (OVERFLOW) begin
-                  ESTADO = OVERFLOW;
-                end else begin
-                  ESTADO = LOCK_WRITE;
-                end
-              end
-              ADDIU: begin
-                MemToReg = 4'b0101;
-                RegDst = 2'b00;
-                RegWrite = 1'b1;
-
-                //resto 
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              BEQ_BNE_BGT_BLE: begin
-                AluSrcA = 1'b1;
-                AluSrcB = 2'b00;
-                AluOP = 3'b111;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                if(Opcode == OP_BEQ) begin
-                  ESTADO = BEQ;
-                end
-                if(Opcode == OP_BNE) begin
-                  ESTADO = BNE;
-                end
-                if(Opcode == OP_BLE) begin
-                  ESTADO = BLE;
-                end
-                if(Opcode == OP_BGT) begin
-                  ESTADO = BGT;
-                end
-              end
-              BEQ: begin
-                BranchOp = 2'b00;
-                PCSource = 3'b101;
-                PCWriteCond = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              BNE: begin
-                BranchOp = 2'b01;
-                PCSource = 3'b101;
-                PCWriteCond = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0;
-                PCWrite = 1'b0; 
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              BGT: begin
-                BranchOp = 2'b10;
-                PCSource = 3'b101;
-                PCWriteCond = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              BLE: begin
-                BranchOp = 2'b11;
-                PCSource = 3'b101;
-                PCWriteCond = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              LB_LH_LW: begin
-                AluSrcA = 1'b1;
-                AluSrcB = 2'b10;
-                ExtendOP = 1'b1;
-                AluOP = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                if(Opcode == OP_LW) begin
-                  ESTADO = LW;
-                end
-                if(Opcode == OP_LH) begin
-                  ESTADO = LH;
-                end
-                if(Opcode == OP_LB) begin
-                  ESTADO = LB;
-                end
-              end
-              LW: begin
-                AluOutWrite = 1'b1;
-                IorD = 1'b1;
-                MemReadOrWrite = 1'b1;
-                RegDst = 1'b0;
-                ExtendOP = 1'b0;
-                MemToReg = 4'b0000;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                IRWrite = 1 'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              LH: begin
-                AluOutWrite = 1'b1;
-                IorD = 1'b1;
-                MemReadOrWrite = 1'b1;
-                RegDst = 1'b0;
-                ExtendOP = 1'b0;
-                MemToReg = 4'b0001;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                IRWrite = 1 'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              LB: begin
-                AluOutWrite = 1'b1;
-                IorD = 1'b1;
-                MemReadOrWrite = 1'b1;
-                RegDst = 1'b0;
-                MemToReg = 4'b0010;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              SB_SH_SW: begin
-                LoadAMem = 1'b0;
-                AluSrcA = 1'b1;
-                AluSrcB = 2'b01;
-                AluOP = 3'b001;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                if(Opcode == OP_SW) begin
-                  ESTADO = SW;
-                end
-                if(Opcode == OP_SH) begin
-                  ESTADO = SH;
-                end
-                if(Opcode == OP_SB) begin
-                  ESTADO = SB;
-                end
-              end
-              SW: begin
-                AluOutWrite = 1'b1;
-                LoadBMem = 1'b0;
-                IorD = 1'b1;
-                WDMux = 1'b1;
-                MemReadOrWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              SH: begin
-                AluOutWrite = 1'b1;
-                LoadBMem = 1'b0;
-                IorD = 1'b1;
-                WDMux = 1'b0;
-                MuxBH = 1'b0;
-                MemReadOrWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0;
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              SB: begin
-                AluOutWrite = 1'b1;
-                LoadBMem = 1'b0;
-                IorD = 1'b1;
-                WDMux = 1'b1;
-                MuxBH = 1'b1;
-                MemReadOrWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              LUI: begin
-                MemToReg = 2'b11;
-                MuxShiftInput = 2'b10;
-                MuxShiftQtd = 2'b11;
-                RegDst = 2'b00;
-                Shift = 3'b010;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              SLTI_1: begin
-                AluSrcA = 1'b1;
-                AluSrcB = 2'b11;
-                ExtendOP = 1'b1;
-                AluOP = 3'b111;
-
-                //RESTO
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //NEXT STATE
-                ESTADO = SLTI_2;
-              end
-              SLTI_2: begin
-                MemToReg = 4'b0100;
-                RegDst = 2'b00;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              SLLM_1: begin
-                LoadAMem = 1'b0;
-                ExtendOP = 1'b0;
-                AluSrcA = 1'b1;
-                AluSrcB = 2'b11;
-                AluOP = 3'b001;
-                AluOutWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = SLLM_2;
-              end
-              SLLM_2: begin
-                PCSource = 3'b001;
-                PCWrite = 1'b1;
-                IorD = 1'b0;
-                MemReadOrWrite = 1'b1;
-                MuxShiftInput = 2'b00;
-                MuxShiftQtd = 2'b00;
-                LoadBMem = 1'b0;
-                Shift = 3'b010;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = SLLM_3;
-              end
-              SLLM_3: begin
-                MemToReg = 4'b0011;
-                RegDst = 2'b00;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-
-              //ESTADOS INSTRUÇÕES J
-              J: begin
-                PCSource = 3'b010;
-                PCWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0;
-
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE; 
-              end
-              JAL_1: begin
-                AluSrcA = 1'b1;
-                AluOP = 3'b000;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = JAL_2;
-              end
-              JAL_2: begin
-                AluOutWrite = 1'b1;
-                MemToReg = 4'b0101;
-                RegDst = 2'b11;
-                RegWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWrite = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = JAL_3;
-              end
-              JAL_3: begin
-                PCSource = 3'b010;
-                PCWrite = 1'b1;
-
-                //resto
-                A_w = 1'b0;
-                B_w = 1'b0;
-                MemDataRegLoad = 1'b0; 
-                PCWriteCond = 1'b0;// ?
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1 'b0;
-                RegWrite = 1'b0;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                initDiv = 1'b0;// ?
-                initMult = 1'b0;// ?
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                CauseWrite = 1'b0;// ?
-
-                //next state
-                ESTADO = LOCK_WRITE;
-              end
-              LOCK_WRITE: begin
-                A_w = 1'b0;
-                B_w = 1'b0;
-                WDMux = 1'b0;
-                MemDataRegLoad = 1'b0; //
-                PCWrite = 1'b0;
-                PCWriteCond = 1'b0;
-                PCSource = 3'b000;
-                IorD = 3'b000;
-                MemReadOrWrite = 1'b0;
-                IRWrite = 1'b0;
-                RegDst = 3'b000;
-                RegWrite = 1'b0;
-                MemToReg = 4'b0000; 
-                LoadAMem = 1'b0;
-                LoadBMem = 1'b0;
-                AluSrcA = 1'b0; 
-                AluSrcB = 2'b00; 
-                AluOP = 3'b000;
-                AluOutWrite = 1'b0;
-                EPCWrite = 1'b0;
-                BranchOp = 2'b00;
-                MuxShiftQtd = 2'b00;
-                MuxShiftInput = 2'b00;
-                OPlow = 1'b0;
-                OPhi = 1'b0;
-                MuxBH = 1'b0;
-                ExtendOP = 1'b0;
-                ExceptionAddress = 1'b0;
-                initDiv = 1'b0;
-                initMult = 1'b0;
-                HIWrite = 1'b0;
-                LOWrite = 1'b0;
-                Shift = 3'b000;
-                INTCause = 1'b0; //???
-                CauseWrite = 1'b0;//???
-
-                //next state
-                ESTADO = FETCH;
-              end
-              UNDEF_OP: begin
-                AluSrcA = 1'b0;
-                AluSrcB = 1'b1;
-                AluOP = 3'b010;
-                EPCWrite = 1'b1;
-                ExceptionAddress = 8'b11111101;
-                IorD = 3'b011;
-                MemReadOrWrite = 1'b1;
-
-                //resto
-
-                //next state
-                ESTADO = LOAD_EXP_TO_PC_1;
-              end
-              OVERFLOW: begin
-                AluSrcA = 1'b0;
-                AluSrcB = 1'b1;
-                AluOP = 3'b010;
-                EPCWrite = 1'b1;
-                ExceptionAddress = 8'b11111110;
-                IorD = 3'b011;
-                MemReadOrWrite = 1'b1;
-
-                //resto
-
-                //next state
-                ESTADO = LOAD_EXP_TO_PC_1;
-              end
-              DIV_BY_ZERO: begin
-                AluSrcA = 1'b0;
-                AluSrcB = 1'b1;
-                AluOP = 3'b010;
-                EPCWrite = 1'b1;
-                ExceptionAddress = 8'b11111111;
-                IorD = 3'b011;
-                MemReadOrWrite = 1'b1;
-
-                //resto
-
-                //next state
-                ESTADO = LOAD_EXP_TO_PC_1;
-              end
-              LOAD_EXP_TO_PC_1: begin
-                LoadAMem = 1'b1;
-                A_w = 1'b1;
-
-                //resto
-
-                //next state
-                ESTADO = LOAD_EXP_TO_PC_2;
-              end
-              LOAD_EXP_TO_PC_2: begin
-                AluSrcA = 1'b0;
-                AluSrcB = 1'b1;
-                PCSource = 3'b000;
-                PCWrite = 1'b1;
-
-                //resto
-
-                //next state
-                ESTADO = FETCH;
-              end
+            end
+            AND: begin
+              //USADOS
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b00;
+              AluOP = 3'b011;
+              AluOutWrite = 1;
               
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next stage
+              ESTADO = ALU_TO_REG;
+            end
+            ALU_TO_REG: begin
+              //USADOS
+              MemToReg = 4'b0101;
+              RegWrite = 1'b1;
+              RegDst = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //NEXT STATE
+              ESTADO = LOCK_WRITE;
+            end
+            MULT_1: begin
+              //USADOS
+              initMult = 1'b1; 
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = MULT_2;
+            end
+            MULT_2: begin
+              OPhi = 1'b1;
+              OPlow = 1'b1;
+              HIWrite = 1'b1;
+              LOWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00; 
+              MuxBH = 1'b1;
+              ExtendOP = 1'b1;
+              ExceptionAddress = 8'b00000000;
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            DIV_1: begin
+              initDiv = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = DIV_2;
+            end
+            DIV_2: begin
+              OPhi = 1'b0;
+              OPlow = 1'b0;
+              HIWrite = 1'b1;
+              LOWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              if (Bvalue == 32'b00000000000000000000000000000000) begin
+                ESTADO = DIV_BY_ZERO;
+              end else begin
+                ESTADO = LOCK_WRITE;
+              end
+            end
+            MFHI: begin
+              MemToReg = 4'b0110;
+              RegDst = 1'b1;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            MFLO: begin
+              MemToReg = 4'b0111;
+              RegDst = 1'b1;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0; 
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+             SHIFT_SHAMT: begin
+               MuxShiftInput = 2'b00;
+               MuxShiftQtd = 2'b01;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0; 
+
+              //next state
+              if (Funct == FUNCT_SLL) begin
+                  ESTADO = SLL;
+              end
+              if (Funct == FUNCT_SRL) begin
+                  ESTADO = SRL;
+              end
+              if (Funct == FUNCT_SRA) begin
+                  ESTADO = SRA;
+              end
+            end
+
+            SLL: begin
+              Shift = 3'b010;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              INTCause = 1'b0;
+
+              //NEXT STATE
+              ESTADO = STORE_SHIFT;
+            end
+            SRL: begin
+              Shift = 3'b100;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              INTCause = 1'b0; 
+
+              //NEXT STATE
+              ESTADO = STORE_SHIFT;
+            end
+            SRA: begin
+              Shift = 3'b011;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              INTCause = 1'b0; 
+
+              //NEXT STATE
+              ESTADO = STORE_SHIFT;
+            end
+            SHIFT_REG: begin
+              MuxShiftInput = 2'b01;
+              MuxShiftQtd = 2'b10;
+              Shift = 3'b001;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              INTCause = 1'b0; 
+
+              //next state
+              if (Funct == FUNCT_SLLV) begin
+                  ESTADO = SLLV;
+              end
+              if (Funct == FUNCT_SRAV) begin
+                  ESTADO = SRAV;
+              end
+            end
+            SRAV: begin
+              Shift = 3'b100;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              INTCause = 1'b0; 
+
+              //next state
+              ESTADO = STORE_SHIFT;
+            end
+            SLLV: begin
+              Shift = 3'b010;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              INTCause = 1'b0; 
+
+              //next state
+              ESTADO = STORE_SHIFT;
+            end
+            STORE_SHIFT: begin
+              MemToReg = 4'b0011;
+              RegWrite = 1'b1;
+              RegDst = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0; 
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            JR: begin
+              AluSrcA = 1'b1;
+              AluOP = 3'b000;
+              PCSource = 3'b000;
+              PCWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0; 
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            SLT_1: begin
+              AluSrcA = 1'b0;
+              AluSrcB = 1'b0;
+              AluOP = 3'b111;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0; 
+
+              //next state
+              ESTADO = SLT_2;
+            end
+            SLT_2: begin
+              MemToReg = 4'b0100;
+              RegWrite = 1'b1;
+              RegDst = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0; 
+
+              //NEXT STATE
+              ESTADO = LOCK_WRITE;
+            end
+            BREAK_1: begin
+              AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              AluOP = 3'b010;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0; 
+
+              //next state
+              ESTADO = BREAK_2;
+            end
+            BREAK_2: begin
+              PCSource = 3'b000;
+              PCWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0; 
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            RTE: begin
+              PCSource = 3'b100;
+              PCWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            ADDM_1: begin
+              IorD = 3'b100;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = ADDM_2;
+            end
+            ADDM_2: begin
+              LoadAMem = 1'b1;
+              A_w = 1'b1;
+
+              //NÃO USADOS
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadBMem = 1'b1;
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = ADDM_2;
+            end
+            ADDM_3: begin
+              IorD = 3'b010;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = ADDM_4;
+            end
+            ADDM_4: begin
+              LoadBMem = 1'b1;
+              B_w = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+                //next state
+              ESTADO = ADDM_5;
+            end
+            ADDM_5: begin
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b00;
+              AluOP = 3'b001;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = ADDM_6;
+            end
+            ADDM_6: begin
+              AluOutWrite = 1'b1;
+              MemToReg = 3'b101;
+              RegDst = 1'b1;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+              
+            //ESTADOS INSTRUÇÕES I
+            ADDI_ADDIU: begin
+              ExtendOP = 1'b1;
+              AluSrcB = 2'b11;
+              AluSrcA = 1'b1;
+              AluOP = 3'b001;
+              AluOutWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              if(Opcode == OP_ADDI) begin
+                ESTADO = ADDI;
+              end 
+              else begin
+                ESTADO = ADDIU;
+              end
+            end
+            ADDI: begin
+              MemToReg = 4'b0101;
+              RegDst = 2'b00;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              if (OVERFLOW) begin
+                ESTADO = OVERFLOW;
+              end else begin
+                ESTADO = LOCK_WRITE;
+              end
+            end
+            ADDIU: begin
+              MemToReg = 4'b0101;
+              RegDst = 2'b00;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            BEQ_BNE_BGT_BLE: begin
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b00;
+              AluOP = 3'b111;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+              //next state
+              if(Opcode == OP_BEQ) begin
+                ESTADO = BEQ;
+              end
+              if(Opcode == OP_BNE) begin
+                ESTADO = BNE;
+              end
+              if(Opcode == OP_BLE) begin
+                ESTADO = BLE;
+              end
+              if(Opcode == OP_BGT) begin
+                ESTADO = BGT;
+              end
+            end
+            BEQ: begin
+              BranchOp = 2'b00;
+              PCSource = 3'b101;
+              PCWriteCond = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            BNE: begin
+              BranchOp = 2'b01;
+              PCSource = 3'b101;
+              PCWriteCond = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            BGT: begin
+              BranchOp = 2'b10;
+              PCSource = 3'b101;
+              PCWriteCond = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            BLE: begin
+              BranchOp = 2'b11;
+              PCSource = 3'b101;
+              PCWriteCond = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            LB_LH_LW: begin
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b10;
+              ExtendOP = 1'b1;
+              AluOP = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+                //next state
+              if(Opcode == OP_LW) begin
+                ESTADO = LW;
+              end
+              if(Opcode == OP_LH) begin
+                ESTADO = LH;
+              end
+              if(Opcode == OP_LB) begin
+                ESTADO = LB;
+              end
+            end
+            LW: begin
+              AluOutWrite = 1'b1;
+              IorD = 1'b1;
+              MemReadOrWrite = 1'b1;
+              RegDst = 1'b0;
+              ExtendOP = 1'b0;
+              MemToReg = 4'b0000;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            LH: begin
+              AluOutWrite = 1'b1;
+              IorD = 1'b1;
+              MemReadOrWrite = 1'b1;
+              RegDst = 1'b0;
+              ExtendOP = 1'b0;
+              MemToReg = 4'b0001;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            LB: begin
+              AluOutWrite = 1'b1;
+              IorD = 1'b1;
+              MemReadOrWrite = 1'b1;
+              RegDst = 1'b0;
+              MemToReg = 4'b0010;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            SB_SH_SW: begin
+              LoadAMem = 1'b0;
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b01;
+              AluOP = 3'b001;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadBMem = 1'b1;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              if(Opcode == OP_SW) begin
+                ESTADO = SW;
+              end
+              if(Opcode == OP_SH) begin
+                ESTADO = SH;
+              end
+              if(Opcode == OP_SB) begin
+                ESTADO = SB;
+              end
+            end
+            SW: begin
+              AluOutWrite = 1'b1;
+              LoadBMem = 1'b0;
+              IorD = 1'b1;
+              WDMux = 1'b1;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            SH: begin
+              AluOutWrite = 1'b1;
+              LoadBMem = 1'b0;
+              IorD = 1'b1;
+              WDMux = 1'b0;
+              MuxBH = 1'b0;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            SB: begin
+              AluOutWrite = 1'b1;
+              LoadBMem = 1'b0;
+              IorD = 1'b1;
+              WDMux = 1'b0;
+              MuxBH = 1'b1;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            LUI: begin
+              MemToReg = 2'b11;
+              MuxShiftInput = 2'b10;
+              MuxShiftQtd = 2'b11;
+              RegDst = 2'b00;
+              Shift = 3'b010;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            SLTI_1: begin
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b11;
+              ExtendOP = 1'b1;
+              AluOP = 3'b111;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //NEXT STATE
+              ESTADO = SLTI_2;
+            end
+            SLTI_2: begin
+              MemToReg = 4'b0100;
+              RegDst = 2'b00;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+            SLLM_1: begin
+              LoadAMem = 1'b0;
+              ExtendOP = 1'b0;
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b11;
+              AluOP = 3'b001;
+              AluOutWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadBMem = 1'b1;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = SLLM_2;
+            end
+            SLLM_2: begin
+              PCSource = 3'b001;
+              PCWrite = 1'b1;
+              IorD = 1'b0;
+              MemReadOrWrite = 1'b1;
+              MuxShiftInput = 2'b00;
+              MuxShiftQtd = 2'b00;
+              LoadBMem = 1'b0;
+              Shift = 3'b010;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = SLLM_3;
+            end
+            SLLM_3: begin
+              MemToReg = 4'b0011;
+              RegDst = 2'b00;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE;
+            end
+
+            //ESTADOS INSTRUÇÕES J
+            J: begin
+              PCSource = 3'b010;
+              PCWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOCK_WRITE; 
+            end
+            JAL_1: begin
+              AluSrcA = 1'b1;
+              AluOP = 3'b000;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = JAL_2;
+            end
+            JAL_2: begin
+              AluOutWrite = 1'b1;
+              MemToReg = 4'b0101;
+              RegDst = 2'b11;
+              RegWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = JAL_3;
+            end
+            JAL_3: begin
+              PCSource = 3'b010;
+              PCWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+                //next state
+              ESTADO = LOCK_WRITE;
+            end
+            LOCK_WRITE: begin
+              A_w = 1'b0;
+              B_w = 1'b0;
+              WDMux = 1'b0;
+              MemDataRegLoad = 1'b0; //
+              PCWrite = 1'b0;
+              PCWriteCond = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1'b0;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000; 
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0; 
+              AluSrcB = 2'b00; 
+              AluOP = 3'b000;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0;
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 1'b0;
+              initDiv = 1'b0;
+              initMult = 1'b0;
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              Shift = 3'b000;
+              INTCause = 1'b0; //???
+              CauseWrite = 1'b0;//???
+
+              //next state
+              ESTADO = FETCH;
+            end
+            UNDEF_OP: begin
+              AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              AluOP = 3'b010;
+              EPCWrite = 1'b1;
+              ExceptionAddress = 8'b11111101;
+              IorD = 3'b011;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOAD_EXP_TO_PC_1;
+            end
+            OVERFLOW: begin
+              AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              AluOP = 3'b010;
+              EPCWrite = 1'b1;
+              ExceptionAddress = 8'b11111110;
+              IorD = 3'b011;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOAD_EXP_TO_PC_1;
+            end
+            DIV_BY_ZERO: begin
+              AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              AluOP = 3'b010;
+              EPCWrite = 1'b1;
+              ExceptionAddress = 8'b11111111;
+              IorD = 3'b011;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOAD_EXP_TO_PC_1;
+            end
+            LOAD_EXP_TO_PC_1: begin
+              LoadAMem = 1'b1;
+              A_w = 1'b1;
+
+              //NÃO USADOS
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadBMem = 1'b1;
+              AluSrcA = 1'b1;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = LOAD_EXP_TO_PC_2;
+            end
+            LOAD_EXP_TO_PC_2: begin
+              AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              PCSource = 3'b000;
+              PCWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWriteCond = 1'b0;// ?
+              MemReadOrWrite = 1'b0;
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              initDiv = 1'b0;// ?
+              initMult = 1'b0;// ?
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              IorD = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b1;
+              LoadBMem = 1'b1;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = FETCH;
+            end
         endcase // ESTADO
       end //else
     end // wlways
