@@ -5,12 +5,12 @@ module div
    parameter bits = 32,
    parameter `F(bits) counter = 0
    )(
-   input `F(bits) dividend,
-   input `F(bits) divisor,
    input clock,
    input reset,
-   input valid,
-
+   input `F(bits) dividend,
+   input `F(bits) divisor,
+   
+   
    output `F(bits) hi,
    output `F(bits) low
 );
@@ -23,7 +23,7 @@ module div
       dvnd[0] = dividend;
       dvsr[0] = divisor;
       quotient[0] = 0;
-      ready[0] = valid;
+      
     end
 
     generate
@@ -40,8 +40,7 @@ module div
           wire [32+i:0] accumulator = {aux1, aux2}>>(i+1);
 
           if (counter[31-i]) begin:gen_ff
-            `mode(ready[i+1], 0)
-            ready[i+1] <= ready[i];
+            
 
             `mode(dvnd[i+1], 0)
             dvnd[i+1] <= accumulator;
@@ -53,7 +52,7 @@ module div
             quotient[i+1] <= quotient[i]|(accumulator<<(31-i));
           end else begin:gen_comb
             always @* begin
-                ready[i+1] = ready[i];
+                
                 dvnd[i+1] = accumulator;
                 dvsr[i+1] = dvsr[i];
                 quotient[i+1] = quotient[i]|(x<<(31-i));

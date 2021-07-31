@@ -13,7 +13,7 @@ module cpu(
     wire [2:0] IorD;
     wire MemReadOrWrite; 
     wire IRWrite;
-    wire [2:0] RegDst;
+    wire [1:0] RegDst;
     wire RegWrite;
     wire [3:0] MemToReg;
     wire LoadAMem;
@@ -76,17 +76,19 @@ module cpu(
     wire [31:0] Reg_Low_Out;
     wire [31:0] Cause_out;
     wire [31:0] Reg_Cause_out;
-
+    wire [31:0] IorD_out;
+    wire [31:0] Wd_mux_out;
+    wire [4:0] RegShift_N;
     wire [27:0] Shift_Left2_26_Out;
 
     wire [25:0] Concat_25b_out;
     
     wire [15:0] Instr15_0; //Funct na instr R
-    wire [15:0] MEM_Data_Reg_Out;
+    wire [31:0] MEM_Data_Reg_Out;
     wire [15:0] Mux_ExtendOp_Out;
 
     wire [5:0] Instr31_26; //Opcode
-    wire [5:0] WriteReg;
+    wire [4:0] WriteReg;
 
     wire [4:0] Instr25_21; 
 	wire [4:0] Instr20_16;
@@ -157,11 +159,11 @@ module cpu(
         B_out,
         ExceptionAddress,
         A_out,
-        Pc_out
+        IorD_out
     );
 
     Memoria MEM_(
-        PC_out,
+        IorD_out,
         clk,
         MemReadOrWrite,
         Wd_mux_out,
@@ -180,6 +182,7 @@ module cpu(
         clk,
         reset,
         IRWrite,
+        MEM_out,
         Instr31_26,
 		Instr25_21,
 		Instr20_16,
@@ -254,7 +257,7 @@ module cpu(
     ula32 ULA_(
         Data_In_Ula_A,
 		Data_In_Ula_B,
-		AluOp,
+		AluOP,
 		Result_ULA, 
 		Overflow_ULA,
 		Negativo_ULA,
@@ -339,7 +342,7 @@ module cpu(
 
     mux_ShiftQtd MUX_SHIFT_QTD_(
         MuxShiftQtd,
-        MEM_Data_Reg_Out,
+        MEM_Data_Reg_Out[4:0],
         Instr15_0[10:6],
         B_out[4:0],
         RegShift_N
@@ -417,10 +420,9 @@ module cpu(
 
     div DIV_(
         clk,
-        rst,
+        reset,
         A_out,
         B_out,
-        initDiv,
         Div_hi_out,
         Div_low_out
     );

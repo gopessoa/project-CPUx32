@@ -1,7 +1,6 @@
 module Brancher(
-
     input wire [1:0]    BranchOP, // op da UC
-    input wire [31:0]   adress,
+    input wire [15:0]   adress,
     input wire [31:0]   ALU_out, // PC+4
     input wire GT,
     input wire LT,
@@ -34,6 +33,8 @@ module Brancher(
     endcase
     end
 
+
+    
     assign Brancher_out = (RESULT) ? adress : ALU_out;
 
 endmodule
