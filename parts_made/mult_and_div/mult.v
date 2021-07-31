@@ -17,7 +17,7 @@ module mult (
 
     assign inv_a = {~a[31], ~a}+1;
 
-    always @(clock) begin
+    always @(posedge clock) begin
       test_case[0] = {b[1], b[0], 1'b0};
       for(i=1; i<counter; i=i+1)
       test_case[i] = {b[2*i+1], b[2*i], b[2*i-1]};

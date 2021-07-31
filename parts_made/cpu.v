@@ -84,14 +84,14 @@ module cpu(
 
     wire [25:0] Concat_25b_out;
     
-    wire [15:0] Instr15_0;
+    wire [15:0] Instr15_0; //Funct na instr R
     wire [15:0] MEM_Data_Reg_Out;
     wire [15:0] Mux_ExtendOp_Out;
 
-    wire [5:0] Instr31_26;
+    wire [5:0] Instr31_26; //Opcode
     wire [5:0] WriteReg;
 
-    wire [4:0] Instr25_21;
+    wire [4:0] Instr25_21; 
 	wire [4:0] Instr20_16;
 
     wire Overflow_ULA;
@@ -101,6 +101,15 @@ module cpu(
     wire Maior_ULA;
 	wire Menor_ULA;
     
+    UC UC_(
+        clk,
+        reset,
+        Instr31_26,
+        Instr15_0[5:0],
+        B_out,
+        Overflow_ULA
+    );
+
     Registrador PC_(
         clk,
         reset,
