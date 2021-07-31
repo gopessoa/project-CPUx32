@@ -3,7 +3,8 @@ module mult (
     input [31:0] b,
     input clock,
     output [31:0] hi,
-    output [31:0] low
+    output [31:0] low,
+    output busy
 );
     parameter bits = 32;
     parameter counter = bits/2;
@@ -42,5 +43,5 @@ module mult (
 
     assign hi = product[31:0];
     assign low = product[63:32];
-
+    assign busy = 1'b0;
 endmodule
