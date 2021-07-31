@@ -1,7 +1,7 @@
 module and_or(
     input wire zero,
     input wire pc_write_cond,
-    input wire pc_write
+    input wire pc_write,
     output wire Pc_w
 );
 

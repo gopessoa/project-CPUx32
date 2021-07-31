@@ -219,8 +219,6 @@ reg [2:0]   CONTADOR;
         IRWrite = 1 'b0;
         AluOutWrite = 1'b0;
         EPCWrite = 1'b0;
-        initDiv = 1'b0;// ?
-        initMult = 1'b0;// ?
         HIWrite = 1'b0;
         LOWrite = 1'b0;
         CauseWrite = 1'b0;// ?
@@ -268,8 +266,6 @@ reg [2:0]   CONTADOR;
             IRWrite = 1 'b0;
             AluOutWrite = 1'b0;
             EPCWrite = 1'b0;
-            initDiv = 1'b0;// ?
-            initMult = 1'b0;// ?
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
@@ -314,8 +310,6 @@ reg [2:0]   CONTADOR;
             IRWrite = 1 'b0;
             AluOutWrite = 1'b0;
             EPCWrite = 1'b0;
-            initDiv = 1'b0;// ?
-            initMult = 1'b0;// ?
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
@@ -358,8 +352,6 @@ reg [2:0]   CONTADOR;
             PCWriteCond = 1'b0;// ?
             AluOutWrite = 1'b0;
             EPCWrite = 1'b0;
-            initDiv = 1'b0;// ?
-            initMult = 1'b0;// ?
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
@@ -406,8 +398,6 @@ reg [2:0]   CONTADOR;
             MemReadOrWrite = 1'b0;
             AluOutWrite = 1'b0;
             EPCWrite = 1'b0;
-            initDiv = 1'b0;// ?
-            initMult = 1'b0;// ?
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
@@ -451,8 +441,6 @@ reg [2:0]   CONTADOR;
             MemReadOrWrite = 1'b0;
             IRWrite = 1 'b0;
             EPCWrite = 1'b0;
-            initDiv = 1'b0;// ?
-            initMult = 1'b0;// ?
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
@@ -791,7 +779,6 @@ reg [2:0]   CONTADOR;
               IRWrite = 1 'b0;
               AluOutWrite = 1'b0;
               EPCWrite = 1'b0;
-              initDiv = 1'b0;// ?
               HIWrite = 1'b0;
               LOWrite = 1'b0;
               CauseWrite = 1'b0;// ?
@@ -878,7 +865,6 @@ reg [2:0]   CONTADOR;
               IRWrite = 1 'b0;
               AluOutWrite = 1'b0;
               EPCWrite = 1'b0;
-              initMult = 1'b0;// ?
               HIWrite = 1'b0;
               LOWrite = 1'b0;
               CauseWrite = 1'b0;// ?
@@ -3271,8 +3257,6 @@ reg [2:0]   CONTADOR;
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
               ExceptionAddress = 1'b0;
-              initDiv = 1'b0;
-              initMult = 1'b0;
               HIWrite = 1'b0;
               LOWrite = 1'b0;
               Shift = 3'b000;
@@ -3323,9 +3307,9 @@ reg [2:0]   CONTADOR;
               INTCause = 1'b0;
         
               //next state
-              ESTADO = UNDEF_OP_WAIT1;
+              ESTADO = UNDEF_OPCODE_WAIT1;
             end
-            UNDEF_OP_WAIT1: begin
+            UNDEF_OPCODE_WAIT1: begin
                             AluSrcA = 1'b0;
               AluSrcB = 1'b1;
               AluOP = 3'b010;
@@ -3363,9 +3347,9 @@ reg [2:0]   CONTADOR;
               Shift = 3'b000;
               INTCause = 1'b0;
               
-              ESTADO = UNDEF_OP_WAIT2;
+              ESTADO = UNDEF_OPCODE_WAIT2;
             end
-            UNDEF_OP_WAIT2: begin
+            UNDEF_OPCODE_WAIT2: begin
               AluSrcA = 1'b0;
               AluSrcB = 1'b1;
               AluOP = 3'b010;
