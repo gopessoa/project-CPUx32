@@ -14,10 +14,10 @@ module UC(
 
     //OUTPUTS
     //MUX
-    output reg A_w;
-    output reg B_w;
-    output reg WDMux;
-    output reg MemDataRegLoad; //???
+    output reg A_w,
+    output reg B_w,
+    output reg WDMux,
+    output reg MemDataRegLoad, //???
     output reg PCWrite,
     output reg PCWriteCond,
     output reg [2:0] PCSource,
@@ -31,7 +31,7 @@ module UC(
     output reg LoadBMem,
     output reg AluSrcA,
     output reg [1:0] AluSrcB,
-    output reg [2:0] AluOp,
+    output reg [2:0] AluOP,
     output reg AluOutWrite,
     output reg EPCWrite,
     output reg [1:0] BranchOp,
@@ -130,7 +130,7 @@ reg [2:0]   CONTADOR;
     parameter OVERFLOW          = 7'b1000000; // 64
     parameter DIV_BY_ZERO       = 7'b1000001; // 65
     parameter LOAD_EXP_TO_PC_1  = 7'b1000010; // 66
-    parameter LOAD_EXP_TO_PC_1  = 7'b1000011; // 67
+    parameter LOAD_EXP_TO_PC_2  = 7'b1000011; // 67
     //LOCK WRITE
     parameter LOCK_WRITE        = 7'b1000100; // 68
 
@@ -146,7 +146,7 @@ reg [2:0]   CONTADOR;
     parameter FUNCT_AND     =   6'b100100;  //  0x24 = 36
     parameter FUNCT_DIV     =   6'b011010;  //  0x1a = 26
     parameter FUNCT_MULT    =   6'b011000;  //  0x18 = 24
-    parameter FUNCT_JR      =   6'0001000;  //  0x8  = 8
+    parameter FUNCT_JR      =   6'b001000;  //  0x8  = 8
     parameter FUNCT_MFHI    =   6'b010000;  //  0x10 = 16
     parameter FUNCT_MFLO    =   6'b010010;  //  0x12 = 18
     parameter FUNCT_SLL     =   6'b000000;  //  0x0  = 0
@@ -185,7 +185,7 @@ reg [2:0]   CONTADOR;
     parameter OP_JAL           =   6'b000011;  //  0x3 = 3
 
     initial begin
-      ESTADO = RESET
+      ESTADO = RESET;
     end
 
     always @(posedge clk) begin
@@ -256,10 +256,11 @@ reg [2:0]   CONTADOR;
           //resto
 
           //next state
-           case(Opcode) begin
+    case(Opcode)
             //INTRUÇÕES EM R
-            OP_R: begin
-            case(Funct) begin
+        OP_R: begin
+
+            case(Funct)
                 FUNCT_ADD: begin
                   ESTADO = ADD;
                 end
@@ -312,62 +313,60 @@ reg [2:0]   CONTADOR;
                   ESTADO = ADDM_1;
                 end
             endcase
-            //INSTRUÇÕES I
-            OP_ADDI: begin
-              ESTADO = ADDI_ADDIU;
-            end
-            OP_ADDIU: begin
-              ESTADO = ADDI_ADDIU;
-            end
-            OP_BEQ: begin
-              ESTADO: BEQ_BNE_BGT_BLE;
-            end
-            OP_BNE: begin
-              ESTADO: BEQ_BNE_BGT_BLE;
-            end
-            OP_BLE: begin
-              ESTADO: BEQ_BNE_BGT_BLE;
-            end
-            OP_BGT: begin
-              ESTADO: BEQ_BNE_BGT_BLE;
-            end
-            OP_SLLM: begin
-              ESTADO = SLLM_1;
-            end
-            OP_SLTI: begin
-              ESTADO = SLTI_1;
-            end
-            OP_LUI: begin
-              ESTADO = LUI;
-            end
-            OP_SB: begin
-              ESTADO = SB_SH_SW;
-            end
-            OP_SH: begin
-              ESTADO = SB_SH_SW;
-            end
-            OP_SW: begin
-              ESTADO = SB_SH_SW;
-            end
-            OP_LB:begin
-              ESTADO = LB_LH_LW;
-            end
-            OP_LH:begin
-              ESTADO = LB_LH_LW;
-            end
-            OP_LW:begin
-              ESTADO = LB_LH_LW;
-            end
-        
-            //INSTRUÇÕES J
-            OP_J: begin
-              ESTADO = J
-            end
-            OP_JAL: begin
-              ESTADO = JAL_1;
-            end    
-           endcase
         end
+            //INSTRUÇÕES I
+        OP_ADDI: begin
+            ESTADO = ADDI_ADDIU;
+        end
+        OP_ADDIU: begin
+            ESTADO = ADDI_ADDIU;
+        end
+        OP_BEQ: begin
+            ESTADO: BEQ_BNE_BGT_BLE;
+        end
+        OP_BNE: begin
+          ESTADO: BEQ_BNE_BGT_BLE;
+        end
+        OP_BLE: begin
+          ESTADO: BEQ_BNE_BGT_BLE;
+        end
+        OP_BGT: begin
+          ESTADO: BEQ_BNE_BGT_BLE;
+        end
+        OP_SLLM: begin
+          ESTADO = SLLM_1;
+        end
+        OP_SLTI: begin
+          ESTADO = SLTI_1;
+        end
+        OP_LUI: begin
+          ESTADO = LUI;
+        end
+        OP_SB: begin
+          ESTADO = SB_SH_SW;
+        end
+        OP_SH: begin
+          ESTADO = SB_SH_SW;
+        end
+        OP_SW: begin
+          ESTADO = SB_SH_SW;
+        end
+        OP_LB:begin
+          ESTADO = LB_LH_LW;
+        end
+        OP_LH:begin
+          ESTADO = LB_LH_LW;
+        end
+        OP_LW:begin
+          ESTADO = LB_LH_LW;
+        end
+            //INSTRUÇÕES J
+        OP_J: begin
+             ESTADO = J;
+        end
+        OP_JAL: begin
+            ESTADO = JAL_1;
+        end    
         //ESTADOS DAS INSTRUÇÕES R
         ADD: begin
           AluSrcA = 1'b1;
@@ -463,7 +462,7 @@ reg [2:0]   CONTADOR;
         MFHI: begin
           MemToReg = 4'b0110;
           RegDst = 1'b1;
-          RegWrite = 1'b1;;
+          RegWrite = 1'b1;
 
           //resto
 
@@ -473,7 +472,7 @@ reg [2:0]   CONTADOR;
         MFLO: begin
           MemToReg = 4'b0111;
           RegDst = 1'b1;
-          RegWrite = 1'b1;;
+          RegWrite = 1'b1;
 
           //resto 
 
@@ -497,6 +496,7 @@ reg [2:0]   CONTADOR;
               ESTADO = SRA;
           end
         end
+
         SLL: begin
           Shift = 3'b010;
 
@@ -553,7 +553,7 @@ reg [2:0]   CONTADOR;
           ESTADO = STORE_SHIFT;
         end
         STORE_SHIFT: begin
-          MemToReg = 4'0011;
+          MemToReg = 4'b0011;
           RegWrite = 1'b1;
           RegDst = 1'b1;
 
@@ -564,7 +564,7 @@ reg [2:0]   CONTADOR;
         end
         JR: begin
           AluSrcA = 1'b1;
-          AluOp = 3'b000;
+          AluOP = 3'b000;
           PCSrc = 3'b000;
           PCWrite = 1'b1;
 
@@ -584,7 +584,7 @@ reg [2:0]   CONTADOR;
           ESTADO = SLT_2;
         end
         SLT_2: begin
-          MemToReg = 4'0100;
+          MemToReg = 4'b0100;
           RegWrite = 1'b1;
           RegDst = 1'b1;
 
@@ -596,7 +596,7 @@ reg [2:0]   CONTADOR;
         BREAK_1: begin
           AluSrcA = 1'b0;
           AluSrcB = 1'b1;
-          AluOp = 3'b010;
+          AluOP = 3'b010;
 
           //resto
 
@@ -660,7 +660,7 @@ reg [2:0]   CONTADOR;
         ADDM_5: begin
           AluSrcA = 1'b1;
           AluSrcB = 2'b00;
-          AluOp = 3'b001;
+          AluOP = 3'b001;
 
           //resto
 
@@ -684,7 +684,7 @@ reg [2:0]   CONTADOR;
           ExtendOP = 1'b1;
           AluSrcB = 2'b11;
           AluSrcA = 1'b1;
-          AluOp = 3'b001;
+          AluOP = 3'b001;
           AluOutWrite = 1'b1;
 
           //resto
@@ -723,7 +723,7 @@ reg [2:0]   CONTADOR;
         BEQ_BNE_BGT_BLE: begin
           AluSrcA = 1'b1;
           AluSrcB = 2'b00;
-          AluOp = 3'b111;
+          AluOP = 3'b111;
 
           //resto
 
@@ -785,7 +785,7 @@ reg [2:0]   CONTADOR;
           AluSrcA = 1'b1;
           AluSrcB = 2'b10;
           ExtendOp = 1'b1;
-          AluOp = 1'b1;
+          AluOP = 1'b1;
 
           //resto
 
@@ -848,7 +848,7 @@ reg [2:0]   CONTADOR;
           LoadAMem = 1'b0;
           AluSrcA = 1'b1;
           AluSrcB = 2'b01;
-          AluOp = 3'b001;
+          AluOP = 3'b001;
 
           //resto
 
@@ -940,7 +940,7 @@ reg [2:0]   CONTADOR;
           ExtendOp = 1'b0;
           AluSrcA = 1'b1;
           AluSrcB = 2'b11;
-          AluOp = 3'b001;
+          AluOP = 3'b001;
           AluOutWrite = 1'b1;
 
           //resto
@@ -986,7 +986,7 @@ reg [2:0]   CONTADOR;
         end
         JAL_1: begin
           AluSrcA = 1'b1;
-          AluOp = 3'b000;
+          AluOP = 3'b000;
 
           //resto
 
@@ -1005,7 +1005,7 @@ reg [2:0]   CONTADOR;
           ESTADO = JAL_3;
         end
         JAL_3: begin
-          PCSource = 3'010;
+          PCSource = 3'b010;
           PCWrite = 1'b1;
 
           //resto
@@ -1031,7 +1031,7 @@ reg [2:0]   CONTADOR;
           LoadBMem = 1'b0;
           AluSrcA = 1'b0; 
           AluSrcB = 2'b00; 
-          AluOp = 3'b000;
+          AluOP = 3'b000;
           AluOutWrite = 1'b0;
           EPCWrite = 1'b0;
           BranchOp = 2'b00;
@@ -1053,4 +1053,5 @@ reg [2:0]   CONTADOR;
           //next state
           ESTADO = FETCH;
         end
+    endcase
 endmodule
