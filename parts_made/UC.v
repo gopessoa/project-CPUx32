@@ -34,10 +34,10 @@ module UC(
     output reg [2:0] AluOp,
     output reg AluOutWrite,
     output reg EPCWrite,
-    output reg [2:0 ] BranchOp,
-    output reg [2:0] MuxShiftQtd,
-    output reg [2:0] MuxShiftInput,
-    output reg OPLow,
+    output reg [1:0] BranchOp,
+    output reg [1:0] MuxShiftQtd,
+    output reg [1:0] MuxShiftInput,
+    output reg OPlow,
     output reg OPhi, 
     output reg MuxBH,
     output reg ExtendOP,
@@ -201,7 +201,7 @@ reg [2:0]   CONTADOR;
         PCWrite = 1'b0;
         MemReadOrWrite = 1'b0;
         IRWrite = 1'b0;
-        BranchOp = 3'b000;
+        BranchOp = 2'b00;
       end else begin
         case(ESTADO)
         FETCH: begin
@@ -267,7 +267,7 @@ reg [2:0]   CONTADOR;
                   ESTADO = AND;
                 end
                 FUNCT_DIV: begin
-                  ESTADO = ALU_TO_REG;
+                  ESTADO = DIV_1;
                 end
                 FUNCT_MULT: begin
                   ESTADO = MULT_1;
@@ -282,28 +282,28 @@ reg [2:0]   CONTADOR;
                   ESTADO = MFLO;
                 end
                 FUNCT_SLL: begin
-                  ESTADO = SLL;
+                  ESTADO = SHIFT_SHAMT;
                 end
                 FUNCT_SLLV: begin
                   ESTADO = SLLV;
                 end
                 FUNCT_SLT: begin
-                  ESTADO = SLT;
+                  ESTADO = SLT_1;
                 end
                 FUNCT_SRA: begin
-                  ESTADO = SRA;
+                  ESTADO = SHIFT_SHAMT;
                 end
                 FUNCT_SRAV: begin
                   ESTADO = SRAV;
                 end
                 FUNCT_SRL: begin
-                  ESTADO = SRL;
+                  ESTADO = SHIFT_SHAMT;
                 end
                 FUNCT_SUB: begin
                   ESTADO = SUB;
                 end
                 FUNCT_BREAK: begin
-                  ESTADO = BREAK;
+                  ESTADO = BREAK_1;
                 end
                 FUNCT_RTE: begin
                   ESTADO = RTE;
@@ -368,6 +368,7 @@ reg [2:0]   CONTADOR;
             end    
            endcase
         end
+        //ESTADOS DAS INSTRUÇÕES R
         ADD: begin
           AluSrcA = 1'b1;
           AluSrcB = 2'b00;
@@ -425,7 +426,631 @@ reg [2:0]   CONTADOR;
           //resto 
 
           //next state
-          ESTADO
+          ESTADO = MULT_2;
         end
-    end
+        MULT_2: begin
+          OPhi = 1'b1;
+          OPlow = 1'b1;
+          HIWrite = 1'b1;
+          LOWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        DIV_1: begin
+          initDiv = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = DIV_2;
+        end
+        DIV_2: begin
+          OPhi = 1'b1;
+          OPlow = 1'b1;
+
+          //resto
+
+          //next state
+          if (Bvalue == 32'b00000000000000000000000000000000) begin
+            ESTADO = DIV_BY_ZERO;
+          end else begin
+             ESTADO = LOCK_WRITE;
+          end
+        end
+        MFHI: begin
+          MemToReg = 4'b0110;
+          RegDst = 1'b1;
+          RegWrite = 1'b1;;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        MFLO: begin
+          MemToReg = 4'b0111;
+          RegDst = 1'b1;
+          RegWrite = 1'b1;;
+
+          //resto 
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        SHIFT_SHAMT: begin
+          MuxShiftInput = 2'b00;
+          MuxShiftQtd = 2'b01;
+
+          //resto
+
+          //next state
+          if (Funct == FUNCT_SLL) begin
+              ESTADO = SLL;
+          end
+          if (Funct == FUNCT_SRL) begin
+              ESTADO = SRL;
+          end
+          if (Funct == FUNCT_SRA) begin
+              ESTADO = SRA;
+          end
+        end
+        SLL: begin
+          Shift = 3'b010;
+
+          //RESTO
+
+          //NEXT STATE
+          ESTADO = STORE_SHIFT;
+        end
+        SRL: begin
+          Shift = 3'b100;
+
+          //RESTO
+
+          //NEXT STATE
+          ESTADO = STORE_SHIFT;
+        end
+        SRA: begin
+          Shift = 3'b011;
+
+          //RESTO
+
+          //NEXT STATE
+          ESTADO = STORE_SHIFT;
+        end
+        SHIFT_REG: begin
+          MuxShiftInput = 2'b01;
+          MuxShiftQtd = 2'b10;
+          Shift = 3'b001;
+
+          //resto
+
+          //next state
+          if (Funct == FUNCT_SLLV) begin
+              ESTADO = SLLV;
+          end
+          if (Funct == FUNCT_SRAV) begin
+              ESTADO = SRAV;
+          end
+        end
+        SRAV: begin
+          Shift = 3'b100;
+
+          //resto
+
+          //next state
+          ESTADO = STORE_SHIFT;
+        end
+        SLLV: begin
+          Shift = 3'b010;
+
+          //resto
+
+          //next state
+          ESTADO = STORE_SHIFT;
+        end
+        STORE_SHIFT: begin
+          MemToReg = 4'0011;
+          RegWrite = 1'b1;
+          RegDst = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        JR: begin
+          AluSrcA = 1'b1;
+          AluOp = 3'b000;
+          PCSrc = 3'b000;
+          PCWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        SLT_1: begin
+          AluSrcA = 1'b0;
+          AluSrcB = 1'b0;
+          AluOP = 3'b111;
+
+          //resto
+
+          //next state
+          ESTADO = SLT_2;
+        end
+        SLT_2: begin
+          MemToReg = 4'0100;
+          RegWrite = 1'b1;
+          RegDst = 1'b1;
+
+          //RESTO
+
+          //NEXT STATE
+          ESTADO = LOCK_WRITE;
+        end
+        BREAK_1: begin
+          AluSrcA = 1'b0;
+          AluSrcB = 1'b1;
+          AluOp = 3'b010;
+
+          //resto
+
+          //next state
+          ESTADO = BREAK_2;
+        end
+        BREAK_2: begin
+          PCSource = 3'b000;
+          PCWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        RTE: begin
+          PCSource = 3'b100;
+          PCWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        ADDM_1: begin
+          IorD = 3'b100;
+          MemReadOrWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = ADDM_2;
+        end
+        ADDM_2: begin
+          LoadAMem = 1'b1;
+          A_w = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = ADDM_2;
+        end
+        ADDM_3: begin
+          IorD = 3'b010;
+          MemReadOrWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = ADDM_4;
+        end
+        ADDM_4: begin
+          LoadBMem = 1'b1;
+          B_w = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = ADDM_5;
+        end
+        ADDM_5: begin
+          AluSrcA = 1'b1;
+          AluSrcB = 2'b00;
+          AluOp = 3'b001;
+
+          //resto
+
+          //next state
+          ESTADO = ADDM_6;
+        end
+        ADDM_6: begin
+          AluOutWrite = 1'b1;
+          MemToReg = 3'b101;
+          RegDST = 1'b1;
+          RegWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+         
+        //ESTADOS INSTRUÇÕES I
+        ADDI_ADDIU: begin
+          ExtendOP = 1'b1;
+          AluSrcB = 2'b11;
+          AluSrcA = 1'b1;
+          AluOp = 3'b001;
+          AluOutWrite = 1'b1;
+
+          //resto
+
+          //next state
+          if(Opcode == OP_ADDI) begin
+            ESTADO = ADDI;
+          end else begin
+            ESTADO = ADDIU;
+          end
+        end
+        ADDI: begin
+          MemToReg = 4'b0101;
+          RegDst = 2'b00;
+          RegWrite = 1'b1;
+
+          //resto 
+
+          //next state
+          if (Overflow) begin
+            ESTADO = OVERFLOW;
+          end else begin
+            ESTADO = LOCK_WRITE;
+          end
+        end
+        ADDIU: begin
+          MemToReg = 4'b0101;
+          RegDst = 2'b00;
+          RegWrite = 1'b1;
+
+          //resto 
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        BEQ_BNE_BGT_BLE: begin
+          AluSrcA = 1'b1;
+          AluSrcB = 2'b00;
+          AluOp = 3'b111;
+
+          //resto
+
+          //next state
+          if(Opcode == OP_BEQ) begin
+            ESTADO = BEQ;
+          end
+          if(Opcode == OP_BNE) begin
+            ESTADO = BNE;
+          end
+          if(Opcode == OP_BLE) begin
+            ESTADO = BLE;
+          end
+          if(Opcode == OP_BGT) begin
+            ESTADO = BGT;
+          end
+        end
+        BEQ: begin
+          BranchOp = 2'b00;
+          PCSrc = 3'b101;
+          PCWriteCond = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        BNE: begin
+          BranchOp = 2'b01;
+          PCSrc = 3'b101;
+          PCWriteCond = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        BGT: begin
+          BranchOp = 2'b10;
+          PCSrc = 3'b101;
+          PCWriteCond = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        BLE: begin
+          BranchOp = 2'b11;
+          PCSrc = 3'b101;
+          PCWriteCond = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        LB_LH_LW: begin
+          AluSrcA = 1'b1;
+          AluSrcB = 2'b10;
+          ExtendOp = 1'b1;
+          AluOp = 1'b1;
+
+          //resto
+
+          //next state
+          if(Opcode == OP_LW) begin
+            ESTADO = LW;
+          end
+          if(Opcode == OP_LH) begin
+            ESTADO = LH;
+          end
+          if(Opcode == OP_LB) begin
+            ESTADO = LB;
+          end
+        end
+        LW: begin
+          AluOutWrite = 1'b1;
+          IorD = 1'b1;
+          MemReadOrWrite = 1'b1;
+          RegDst = 1'b0;
+          ExtendOP = 1'b0;
+          MemToReg = 4'b0000;
+          RegWrite = 1'b1;
+
+          //resto
+
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        LH: begin
+          AluOutWrite = 1'b1;
+          IorD = 1'b1;
+          MemReadOrWrite = 1'b1;
+          RegDst = 1'b0;
+          ExtendOP = 1'b0;
+          MemToReg = 4'b0001;
+          RegWrite = 1'b1;
+
+          //resto
+
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        LB: begin
+          AluOutWrite = 1'b1;
+          IorD = 1'b1;
+          MemReadOrWrite = 1'b1;
+          RegDst = 1'b0;
+          MemToReg = 4'b0010;
+          RegWrite = 1'b1;
+
+          //resto
+
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        SB_SH_SW: begin
+          LoadAMem = 1'b0;
+          AluSrcA = 1'b1;
+          AluSrcB = 2'b01;
+          AluOp = 3'b001;
+
+          //resto
+
+          //next state
+          if(Opcode == OP_SW) begin
+            ESTADO = SW;
+          end
+          if(Opcode == OP_SH) begin
+            ESTADO = SH;
+          end
+          if(Opcode == OP_SB) begin
+            ESTADO = SB;
+          end
+        end
+        SW: begin
+          AluOutWrite = 1'b1;
+          LoadBMem = 1'b0;
+          IorD = 1'b1;
+          WDMUX = 1'b1;
+          MemReadOrWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        SH: begin
+          AluOutWrite = 1'b1;
+          LoadBMem = 1'b0;
+          IorD = 1'b1;
+          WDMUX = 1'b0;
+          MuxBH = 1'b0;
+          MemReadOrWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        SB: begin
+          AluOutWrite = 1'b1;
+          LoadBMem = 1'b0;
+          IorD = 1'b1;
+          WDMUX = 1'b1;
+          MuxBH = 1'b1;
+          MemReadOrWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        LUI: begin
+          MemToReg = 2'b11;
+          MuxShiftInput = 2'b10;
+          MuxShiftQtd = 2'b11;
+          RegDst = 2'b00;
+          Shift = 3'b010;
+          RegWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        SLTI_1: begin
+          AluSrcA = 1'b1;
+          AluSrcB = 2'b11;
+          ExtendOP = 1'b1;
+          AluOP = 3'b111;
+
+          //RESTO
+
+          //NEXT STATE
+          ESTADO = SLTI_2;
+        end
+        SLTI_2: begin
+          MemToReg = 4'b0100;
+          RegDst = 2'b00;
+          RegWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        SLLM_1: begin
+          LoadAMem = 1'b0;
+          ExtendOp = 1'b0;
+          AluSrcA = 1'b1;
+          AluSrcB = 2'b11;
+          AluOp = 3'b001;
+          AluOutWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = SLLM_2;
+        end
+        SLLM_2: begin
+          PCSource = 3'b001;
+          PCWrite = 1'b1;
+          IorD = 1'b0;
+          MemReadOrWrite = 1'b1;
+          MuxShiftInput = 2'b00;
+          MuxShiftQtd = 2'b00;
+          LoadBMem = 1'b0;
+          Shift = 3'b010;
+
+          //resto
+
+          //next state
+          ESTADO = SLLLM_3;
+        end
+        SLLM_3: begin
+          MemToReg = 4'b0011;
+          RegDst = 2'b00;
+          RegWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+
+        //ESTADOS INSTRUÇÕES J
+        J: begin
+          PCSource = 3'b010;
+          PCWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE; 
+        end
+        JAL_1: begin
+          AluSrcA = 1'b1;
+          AluOp = 3'b000;
+
+          //resto
+
+          //next state
+          ESTADO = JAL_2;
+        end
+        JAL_2: begin
+          AluOutWrite = 1'b1;
+          MemToReg = 4'b0101;
+          RegDst = 2'b11;
+          RegWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = JAL_3;
+        end
+        JAL_3: begin
+          PCSource = 3'010;
+          PCWrite = 1'b1;
+
+          //resto
+
+          //next state
+          ESTADO = LOCK_WRITE;
+        end
+        LOCK_WRITE: begin
+          A_w = 1'b0;
+          B_w = 1'b0;
+          WDMux = 1'b0;
+          MemDataRegLoad = 1'b0; //
+          PCWrite = 1'b0;
+          PCWriteCond = 1'b0;
+          PCSource = 3'b000;
+          IorD = 3'b000;
+          MemReadOrWrite = 1'b0;
+          IRWrite = 1'b0;
+          RegDst = 3'b000;
+          RegWrite = 1'b0;
+          MemToReg = 4'b0000; 
+          LoadAMem = 1'b0;
+          LoadBMem = 1'b0;
+          AluSrcA = 1'b0; 
+          AluSrcB = 2'b00; 
+          AluOp = 3'b000;
+          AluOutWrite = 1'b0;
+          EPCWrite = 1'b0;
+          BranchOp = 2'b00;
+          MuxShiftQtd = 2'b00;
+          MuxShiftInput = 2'b00;
+          OPlow = 1'b0;
+          OPhi = 1'b0;
+          MuxBH = 1'b0;
+          ExtendOP = 1'b0;
+          ExceptionAddress = 1'b0;
+          initDiv = 1'b0;
+          initMult = 1'b0;
+          HIWrite = 1'b0;
+          LOWrite = 1'b0;
+          Shift = 3'b000;
+          INTCause = 1'b0; //???
+          CauseWrite = 1'b0;//???
+
+          //next state
+          ESTADO = FETCH;
+        end
 endmodule
