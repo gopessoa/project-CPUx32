@@ -248,12 +248,13 @@ module cpu(
         EPC_Out
     );
 
-    Brancher BRANCHER_( //NÂO TEMOS ESSA UNIDADE AINDA	
+    Brancher BRANCHER_(
+        BranchOp,
+        Instr15_0,  // endereço
+        AluOut_Out, // PC+4
         Maior_ULA,
 		Menor_ULA,
         Igual_ULA,
-        AluOut_Out,
-        Instr15_0,
         Brancher_Out
     ); 
 
