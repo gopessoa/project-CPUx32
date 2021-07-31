@@ -9,7 +9,7 @@ module UC(
     input wire [5:0] Funct,
     //flags
     input wire [31:0] Bvalue,   //  -->     divByZero exception if(B == 0)
-    input wire overflow,        //  -->     overflow exception para adição
+    input wire overflow,        //  -->     OVERFLOW exception para adição
     //input wire undef opcode 
 
     //OUTPUTS
@@ -256,7 +256,7 @@ reg [2:0]   CONTADOR;
           //resto
 
           //next state
-    case(Opcode)
+     case(Opcode)
             //INTRUÇÕES EM R
         OP_R: begin
 
@@ -377,7 +377,7 @@ reg [2:0]   CONTADOR;
           //resto
 
           //next stage
-          if (overflow) begin
+          if (OVERFLOW) begin
             ESTADO = OVERFLOW;
           end else begin
              ESTADO = ALU_TO_REG;
@@ -392,7 +392,7 @@ reg [2:0]   CONTADOR;
           //resto
 
           //next stage
-           if (overflow) begin
+           if (OVERFLOW) begin
             ESTADO = OVERFLOW;
           end else begin
              ESTADO = ALU_TO_REG;
@@ -565,7 +565,7 @@ reg [2:0]   CONTADOR;
         JR: begin
           AluSrcA = 1'b1;
           AluOP = 3'b000;
-          PCSrc = 3'b000;
+          PCSource = 3'b000;
           PCWrite = 1'b1;
 
           //resto
@@ -670,7 +670,7 @@ reg [2:0]   CONTADOR;
         ADDM_6: begin
           AluOutWrite = 1'b1;
           MemToReg = 3'b101;
-          RegDST = 1'b1;
+          RegDst = 1'b1;
           RegWrite = 1'b1;
 
           //resto
@@ -692,7 +692,8 @@ reg [2:0]   CONTADOR;
           //next state
           if(Opcode == OP_ADDI) begin
             ESTADO = ADDI;
-          end else begin
+          end 
+          else begin
             ESTADO = ADDIU;
           end
         end
@@ -704,7 +705,7 @@ reg [2:0]   CONTADOR;
           //resto 
 
           //next state
-          if (Overflow) begin
+          if (OVERFLOW) begin
             ESTADO = OVERFLOW;
           end else begin
             ESTADO = LOCK_WRITE;
@@ -743,7 +744,7 @@ reg [2:0]   CONTADOR;
         end
         BEQ: begin
           BranchOp = 2'b00;
-          PCSrc = 3'b101;
+          PCSource = 3'b101;
           PCWriteCond = 1'b1;
 
           //resto
@@ -753,7 +754,7 @@ reg [2:0]   CONTADOR;
         end
         BNE: begin
           BranchOp = 2'b01;
-          PCSrc = 3'b101;
+          PCSource = 3'b101;
           PCWriteCond = 1'b1;
 
           //resto
@@ -763,7 +764,7 @@ reg [2:0]   CONTADOR;
         end
         BGT: begin
           BranchOp = 2'b10;
-          PCSrc = 3'b101;
+          PCSource = 3'b101;
           PCWriteCond = 1'b1;
 
           //resto
@@ -773,7 +774,7 @@ reg [2:0]   CONTADOR;
         end
         BLE: begin
           BranchOp = 2'b11;
-          PCSrc = 3'b101;
+          PCSource = 3'b101;
           PCWriteCond = 1'b1;
 
           //resto
@@ -784,7 +785,7 @@ reg [2:0]   CONTADOR;
         LB_LH_LW: begin
           AluSrcA = 1'b1;
           AluSrcB = 2'b10;
-          ExtendOp = 1'b1;
+          ExtendOP = 1'b1;
           AluOP = 1'b1;
 
           //resto
@@ -867,7 +868,7 @@ reg [2:0]   CONTADOR;
           AluOutWrite = 1'b1;
           LoadBMem = 1'b0;
           IorD = 1'b1;
-          WDMUX = 1'b1;
+          WDMux = 1'b1;
           MemReadOrWrite = 1'b1;
 
           //resto
@@ -879,7 +880,7 @@ reg [2:0]   CONTADOR;
           AluOutWrite = 1'b1;
           LoadBMem = 1'b0;
           IorD = 1'b1;
-          WDMUX = 1'b0;
+          WDMux = 1'b0;
           MuxBH = 1'b0;
           MemReadOrWrite = 1'b1;
 
@@ -892,7 +893,7 @@ reg [2:0]   CONTADOR;
           AluOutWrite = 1'b1;
           LoadBMem = 1'b0;
           IorD = 1'b1;
-          WDMUX = 1'b1;
+          WDMux = 1'b1;
           MuxBH = 1'b1;
           MemReadOrWrite = 1'b1;
 
@@ -937,7 +938,7 @@ reg [2:0]   CONTADOR;
         end
         SLLM_1: begin
           LoadAMem = 1'b0;
-          ExtendOp = 1'b0;
+          ExtendOP = 1'b0;
           AluSrcA = 1'b1;
           AluSrcB = 2'b11;
           AluOP = 3'b001;
@@ -961,7 +962,7 @@ reg [2:0]   CONTADOR;
           //resto
 
           //next state
-          ESTADO = SLLLM_3;
+          ESTADO = SLLM_3;
         end
         SLLM_3: begin
           MemToReg = 4'b0011;
@@ -1054,4 +1055,5 @@ reg [2:0]   CONTADOR;
           ESTADO = FETCH;
         end
     endcase
+  end
 endmodule
