@@ -133,8 +133,21 @@ reg [2:0]   CONTADOR;
     //LOCK WRITE
     parameter LOCK_WRITE        = 7'b1000100; // 68 ok
 
+    //WAITS
+       //EXCEPTIONS
+    parameter UNDEF_OPCODE_WAIT1 = 7'b1000101; // 69 okj
+    parameter UNDEF_OPCODE_WAIT2 = 7'b100110; // 70 ok
+    parameter DIV_BY_0_WAIT1 = 7'b1000111; // 71 ok
+    parameter DIV_BY_0_WAIT2 = 7'b1001000; // 72 ok
+    parameter OVERFLOW_WAIT1 = 7'b1001001; // 73 ok
+    parameter OVERFLOW_WAIT2 = 7'b1001010; // 74 ok
 
-
+       //ADDM
+    parameter ADDM_WAIT_1 = 7'b1001011; //75 ok
+    parameter ADDM_WAIT_2 = 7'b1001100; //76 ok
+    parameter ADDM_WAIT_3 = 7'b1001101; //77 ok
+    parameter ADDM_WAIT_4 = 7'b1001110; //78 ok
+  
 
       
 
@@ -182,6 +195,8 @@ reg [2:0]   CONTADOR;
         //J
     parameter OP_J             =   6'b000010;  //  0x2 = 2
     parameter OP_JAL           =   6'b000011;  //  0x3 = 3
+
+    
 
     initial begin
       ESTADO = RESET;
@@ -1684,6 +1699,92 @@ reg [2:0]   CONTADOR;
               INTCause = 1'b0;
 
               //next state
+              ESTADO = ADDM_WAIT_1;
+            end
+            ADDM_WAIT_1: begin
+              IorD = 3'b100;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = ADDM_WAIT_2;
+            end
+            ADDM_WAIT_2: begin
+              IorD = 3'b100;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
               ESTADO = ADDM_2;
             end
             ADDM_2: begin
@@ -1727,9 +1828,95 @@ reg [2:0]   CONTADOR;
               INTCause = 1'b0;
 
               //next state
-              ESTADO = ADDM_2;
+              ESTADO = ADDM_3;
             end
             ADDM_3: begin
+              IorD = 3'b010;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = ADDM_WAIT_3;
+            end
+            ADDM_WAIT_3: begin
+              IorD = 3'b010;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              EPCWrite = 1'b0;
+              
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcA = 1'b0;
+              AluSrcB = 2'b00;
+              AluOP = 3'b000;
+              BranchOp = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              ExceptionAddress = 8'b00000000;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              //next state
+              ESTADO = ADDM_WAIT_4;
+            end
+            ADDM_WAIT_4: begin
               IorD = 3'b010;
               MemReadOrWrite = 1'b1;
 
@@ -3134,9 +3321,88 @@ reg [2:0]   CONTADOR;
               
               Shift = 3'b000;
               INTCause = 1'b0;
-
+        
               //next state
+              ESTADO = UNDEF_OP_WAIT1;
+            end
+            UNDEF_OP_WAIT1: begin
+                            AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              AluOP = 3'b010;
+              EPCWrite = 1'b1;
+              ExceptionAddress = 8'b11111101;
+              IorD = 3'b011;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              Shift = 3'b000;
+              INTCause = 1'b0;
+              
+              ESTADO = UNDEF_OP_WAIT2;
+            end
+            UNDEF_OP_WAIT2: begin
+              AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              AluOP = 3'b010;
+              EPCWrite = 1'b1;
+              ExceptionAddress = 8'b11111101;
+              IorD = 3'b011;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+              Shift = 3'b000;
+              INTCause = 1'b0;
               ESTADO = LOAD_EXP_TO_PC_1;
+              
             end
             OVERFLOW: begin
               AluSrcA = 1'b0;
@@ -3179,6 +3445,91 @@ reg [2:0]   CONTADOR;
               INTCause = 1'b0;
 
               //next state
+              ESTADO = OVERFLOW_WAIT1;
+            end
+            OVERFLOW_WAIT1: begin
+                            AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              AluOP = 3'b010;
+              EPCWrite = 1'b1;
+              ExceptionAddress = 8'b11111110;
+              IorD = 3'b011;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              ESTADO = OVERFLOW_WAIT2;
+            end
+            OVERFLOW_WAIT2: begin
+
+              AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              AluOP = 3'b010;
+              EPCWrite = 1'b1;
+              ExceptionAddress = 8'b11111110;
+              IorD = 3'b011;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
               ESTADO = LOAD_EXP_TO_PC_1;
             end
             DIV_BY_ZERO: begin
@@ -3222,6 +3573,52 @@ reg [2:0]   CONTADOR;
               INTCause = 1'b0;
 
               //next state
+              ESTADO = DIV_BY_0_WAIT1;
+            end
+            DIV_BY_0_WAIT1: begin
+                            AluSrcA = 1'b0;
+              AluSrcB = 1'b1;
+              AluOP = 3'b010;
+              EPCWrite = 1'b1;
+              ExceptionAddress = 8'b11111111;
+              IorD = 3'b011;
+              MemReadOrWrite = 1'b1;
+
+              //NÃO USADOS
+              A_w = 1'b0;
+              B_w = 1'b0;
+              MemDataRegLoad = 1'b0;
+              PCWrite = 1'b0; 
+              PCWriteCond = 1'b0;// ?
+              IRWrite = 1 'b0;
+              AluOutWrite = 1'b0;
+              
+              HIWrite = 1'b0;
+              LOWrite = 1'b0;
+              CauseWrite = 1'b0;// ?
+              WDMux = 1'b0;
+              PCSource = 3'b000;
+              RegDst = 3'b000;
+              RegWrite = 1'b0;
+              MemToReg = 4'b0000;
+              LoadAMem = 1'b0;
+              LoadBMem = 1'b0;
+              AluSrcB = 2'b00;
+              MuxShiftQtd = 2'b00;
+              MuxShiftInput = 2'b00;
+              OPlow = 1'b0;
+              OPhi = 1'b0; 
+              MuxBH = 1'b0;
+              ExtendOP = 1'b0;
+               
+              
+              Shift = 3'b000;
+              INTCause = 1'b0;
+
+              ESTADO = DIV_BY_0_WAIT2;
+            end
+            DIV_BY_0_WAIT2: begin
+              
               ESTADO = LOAD_EXP_TO_PC_1;
             end
             LOAD_EXP_TO_PC_1: begin
