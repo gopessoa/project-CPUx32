@@ -16,7 +16,7 @@ module UC(
     //MUX
     output reg A_w,
     output reg B_w,
-    output reg WDMux = 1'b0,
+    output reg WDMux,
     output reg MemDataRegLoad, //???
     output reg PCWrite,
     output reg PCWriteCond,

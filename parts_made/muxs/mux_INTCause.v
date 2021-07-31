@@ -1,4 +1,4 @@
-module mux_IorD(
+module mux_INTCause(
 
     input wire selector,
     output wire data_out

@@ -3,42 +3,39 @@ module cpu(
     input wire reset
 );
     // Fios de Controle
-    wire PC_w; //Adicionado
-    wire A_w; //Adicionado
-    wire B_w; //Adicionado
-    wire WDMux; //Adicionado
-    wire MemDataRegLoad; //Adicionado
+    wire A_w;
+    wire B_w;
+    wire WDMux;
+    wire MemDataRegLoad; //???
     wire PCWrite;
     wire PCWriteCond;
-    wire PCSource;
-    wire IorD;
-    wire MemReadOrWrite;
+    wire [2:0] PCSource;
+    wire [2:0] IorD;
+    wire MemReadOrWrite; 
     wire IRWrite;
-    wire RegDst;
+    wire [2:0] RegDst;
     wire RegWrite;
-    wire MemToReg;
+    wire [3:0] MemToReg;
     wire LoadAMem;
     wire LoadBMem;
     wire AluSrcA;
-    wire AluSrcB;
-    wire AluOp;
+    wire [1:0] AluSrcB;
+    wire [2:0] AluOP;
     wire AluOutWrite;
     wire EPCWrite;
-    wire BranchOp;
-    wire MuxShiftQtd;
-    wire MuxShiftInput;
-    wire OPLow;
-    wire OPhi;
+    wire [1:0] BranchOp;
+    wire [1:0] MuxShiftQtd;
+    wire [1:0] MuxShiftInput;
+    wire OPlow;
+    wire OPhi; 
     wire MuxBH;
     wire ExtendOP;
-    wire ExceptionAddress;
-    wire initDiv;
-    wire initMult;
-    wire HIWrite;
+    wire [7:0] ExceptionAddress; //???
+    wire HIWrite; 
     wire LOWrite;
-    wire Shift;
-    wire INTCause;
-    wire CauseWrite;
+    wire [2:0] Shift;
+    wire INTCause; //???
+    wire CauseWrite; //???
 
     // Fios de Dados 
 
@@ -107,9 +104,42 @@ module cpu(
         Instr31_26,
         Instr15_0[5:0],
         B_out,
-        Overflow_ULA
+        Overflow_ULA,
 
         //outputs
+        A_w,
+        B_w,
+        WDMux,
+        MemDataRegLoad, //???
+        PCWrite,
+        PCWriteCond,
+        PCSource,
+        IorD,
+        MemReadOrWrite, 
+        IRWrite,
+        RegDst,
+        RegWrite,
+        MemToReg,
+        LoadAMem,
+        LoadBMem,
+        AluSrcA,
+        AluSrcB,
+        AluOP,
+        AluOutWrite,
+        EPCWrite,
+        BranchOp,
+        MuxShiftQtd,
+        MuxShiftInput,
+        OPlow,
+        OPhi, 
+        MuxBH,
+        ExtendOP,
+        ExceptionAddress, //???
+        HIWrite, 
+        LOWrite,
+        Shift,
+        INTCause, //???
+        CauseWrite //???
     );
 
     Registrador PC_(

@@ -1,4 +1,4 @@
-module mux_HI(
+module mux_LOW(
     input wire selector,
     input wire [31:0] data_divLOW,
     input wire [31:0] data_multLOW,
