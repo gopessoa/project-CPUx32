@@ -22,7 +22,7 @@ module Brancher(
         IS_ET: begin
           RESULT = ET;
         end
-        IS_notET: begin
+        IS_notEt: begin
           RESULT = ET;
         end
         IS_GT: begin

@@ -41,7 +41,7 @@ module UC(
     output reg OPhi, 
     output reg MuxBH,
     output reg ExtendOP,
-    output reg [7:0] ExceptionAddress, //???
+    output reg [31:0] ExceptionAddress, //???
 
     output reg HIWrite, 
     output reg LOWrite,
@@ -240,7 +240,7 @@ reg [2:0]   CONTADOR;
         OPhi = 1'b0; 
         MuxBH = 1'b0;
         ExtendOP = 1'b0;
-        ExceptionAddress = 8'b00000000;
+        ExceptionAddress = 32'b00000000000000000000000000000000;
          
         
         Shift = 3'b000;
@@ -287,7 +287,7 @@ reg [2:0]   CONTADOR;
             OPhi = 1'b0; 
             MuxBH = 1'b0;
             ExtendOP = 1'b0;
-            ExceptionAddress = 8'b00000000;
+            ExceptionAddress = 32'b00000000000000000000000000000000;
              
             
             Shift = 3'b000;
@@ -330,7 +330,7 @@ reg [2:0]   CONTADOR;
             OPhi = 1'b0; 
             MuxBH = 1'b0;
             ExtendOP = 1'b0;
-            ExceptionAddress = 8'b00000000;
+            ExceptionAddress = 32'b00000000000000000000000000000000;
              
             
             Shift = 3'b000;
@@ -373,7 +373,7 @@ reg [2:0]   CONTADOR;
             OPhi = 1'b0; 
             MuxBH = 1'b0;
             ExtendOP = 1'b0;
-            ExceptionAddress = 8'b00000000;
+            ExceptionAddress = 32'b00000000000000000000000000000000;
              
             
             Shift = 3'b000;
@@ -416,7 +416,7 @@ reg [2:0]   CONTADOR;
             OPhi = 1'b0; 
             MuxBH = 1'b0;
             ExtendOP = 1'b0;
-            ExceptionAddress = 8'b00000000;
+            ExceptionAddress = 32'b00000000000000000000000000000000;
              
             
             Shift = 3'b000;
@@ -459,7 +459,7 @@ reg [2:0]   CONTADOR;
             OPhi = 1'b0; 
             MuxBH = 1'b0;
             ExtendOP = 1'b0;
-            ExceptionAddress = 8'b00000000;
+            ExceptionAddress = 32'b00000000000000000000000000000000;
              
             
             Shift = 3'b000;
@@ -616,7 +616,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -664,7 +664,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -712,7 +712,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -756,7 +756,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -800,7 +800,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -845,7 +845,7 @@ reg [2:0]   CONTADOR;
               MuxShiftInput = 2'b00; 
               MuxBH = 1'b1;
               ExtendOP = 1'b1;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
               Shift = 3'b000;
               INTCause = 1'b0;
 
@@ -886,7 +886,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -929,7 +929,7 @@ reg [2:0]   CONTADOR;
               MuxShiftInput = 2'b00;
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -976,7 +976,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1019,7 +1019,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1062,7 +1062,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1115,7 +1115,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               INTCause = 1'b0;
@@ -1158,7 +1158,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               INTCause = 1'b0; 
@@ -1201,7 +1201,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               INTCause = 1'b0; 
@@ -1244,7 +1244,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               INTCause = 1'b0; 
@@ -1292,7 +1292,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               INTCause = 1'b0; 
@@ -1335,7 +1335,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               INTCause = 1'b0; 
@@ -1377,7 +1377,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1420,7 +1420,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1463,7 +1463,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1506,7 +1506,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1549,7 +1549,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1592,7 +1592,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1635,7 +1635,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1678,7 +1678,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1721,7 +1721,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1764,7 +1764,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1807,7 +1807,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1850,7 +1850,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1893,7 +1893,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1936,7 +1936,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -1979,7 +1979,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2022,7 +2022,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2065,7 +2065,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2110,7 +2110,7 @@ reg [2:0]   CONTADOR;
               OPlow = 1'b0;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2158,7 +2158,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2205,7 +2205,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
               Shift = 3'b000;
               INTCause = 1'b0;
 
@@ -2246,7 +2246,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2299,7 +2299,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2342,7 +2342,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2385,7 +2385,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2428,7 +2428,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2471,7 +2471,7 @@ reg [2:0]   CONTADOR;
               OPlow = 1'b0;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2522,7 +2522,7 @@ reg [2:0]   CONTADOR;
               OPlow = 1'b0;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2565,7 +2565,7 @@ reg [2:0]   CONTADOR;
               OPlow = 1'b0;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2608,7 +2608,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2651,7 +2651,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
               Shift = 3'b000;
               INTCause = 1'b0;
 
@@ -2701,7 +2701,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2744,7 +2744,7 @@ reg [2:0]   CONTADOR;
               OPlow = 1'b0;
               OPhi = 1'b0; 
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2787,7 +2787,7 @@ reg [2:0]   CONTADOR;
               OPlow = 1'b0;
               OPhi = 1'b0; 
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2831,7 +2831,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               INTCause = 1'b0;
@@ -2873,7 +2873,7 @@ reg [2:0]   CONTADOR;
               OPlow = 1'b0;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2916,7 +2916,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -2959,7 +2959,7 @@ reg [2:0]   CONTADOR;
               OPlow = 1'b0;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -3003,7 +3003,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               INTCause = 1'b0;
@@ -3045,7 +3045,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -3090,7 +3090,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -3133,7 +3133,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -3176,7 +3176,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -3219,7 +3219,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -3639,7 +3639,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;
@@ -3682,7 +3682,7 @@ reg [2:0]   CONTADOR;
               OPhi = 1'b0; 
               MuxBH = 1'b0;
               ExtendOP = 1'b0;
-              ExceptionAddress = 8'b00000000;
+              ExceptionAddress = 32'b00000000000000000000000000000000;
                
               
               Shift = 3'b000;

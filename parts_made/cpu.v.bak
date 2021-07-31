@@ -30,7 +30,7 @@ module cpu(
     wire OPhi; 
     wire MuxBH;
     wire ExtendOP;
-    wire [31:0] ExceptionAddress; //???
+    wire [7:0] ExceptionAddress; //???
     wire HIWrite; 
     wire LOWrite;
     wire [2:0] Shift;
@@ -151,13 +151,11 @@ module cpu(
     );
 
     mux_IorD MUX_IORD_(
-        IorD,
         PC_out,      
         AluOut_Out,
         B_out,
         ExceptionAddress,
-        A_out,
-        Pc_out
+        A_out
     );
 
     Memoria MEM_(
@@ -425,7 +423,7 @@ module cpu(
         Div_low_out
     );
 
-    mux_HI MUX_HI_(
+    mux_Hi MUX_HI_(
         OPhi,
         Div_hi_out,
         Mult_hi_out,

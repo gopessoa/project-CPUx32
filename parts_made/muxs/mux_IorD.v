@@ -5,7 +5,7 @@ module mux_IorD(
     input wire [31:0] data_2,
     input wire [31:0] data_3,
     input wire [31:0] data_4,
-    output wire [31:0] data_out
+    output wire [31:0] mux_iord_out
 );
 
 
@@ -17,6 +17,6 @@ module mux_IorD(
     assign A1 = (selector[0]) ? data_1 : data_0;
     assign A2 = (selector[0]) ? data_3 : data_2;
     assign A3 = (selector[1]) ? A2 : A1;
-    assign data_out = (selector[2]) ? data_4 : A3;
+    assign mux_iord_out = (selector[2]) ? data_4 : A3;
 
 endmodule
