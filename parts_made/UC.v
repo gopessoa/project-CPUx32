@@ -41,15 +41,15 @@ module UC(
     output reg OPhi, 
     output reg MuxBH,
     output reg ExtendOP,
-    output wire ExceptionAddress, //???
+    output reg ExceptionAddress, //???
     output reg initDiv,
     output reg initMult,
     output reg HIWrite, 
     output reg LOWrite,
     output reg [2:0] Shift,
 
-    output wire INTCause, //???
-    output wire CauseWrite //???
+    output reg INTCause, //???
+    output reg CauseWrite //???
 
 );
 
@@ -59,72 +59,72 @@ reg [2:0]   CONTADOR;
 
 //CONSTANTES
     //ESTADOS PRINCIPAIS
-    parameter RESET           = 7'b0000000; // 0
-    parameter FETCH           = 7'b0000001; // 1
-    parameter FETCH_2           = 7'b0000010; // 2
-    parameter FETCH_3           = 7'b0000011; // 3
-    parameter DECODE            = 7'b0000100; // 4 
-    parameter DECODE_2          = 7'b0000101; // 5
-    parameter WAIT              = 7'b0000110; // 6
+    parameter RESET           = 7'b0000000; // 0 ok
+    parameter FETCH           = 7'b0000001; // 1 ok
+    parameter FETCH_2           = 7'b0000010; // 2 ok
+    parameter FETCH_3           = 7'b0000011; // 3 ok
+    parameter DECODE            = 7'b0000100; // 4  ok
+    parameter DECODE_2          = 7'b0000101; // 5 ok
+    parameter WAIT              = 7'b0000110; // 6 vai usar isso?
     //ESTADOS DE FORMATO R
-    parameter ADD               = 7'b0000111; // 7
-    parameter SUB               = 7'b0001000; // 8
-    parameter AND               = 7'b0001001; // 9
-    parameter ALU_TO_REG        = 7'b0001010; // 10
-    parameter MULT_1            = 7'b0001011; // 11
-    parameter MULT_2            = 7'b0001100; // 12
-    parameter DIV_1             = 7'b0001101; // 13
-    parameter DIV_2             = 7'b0001110; // 14
-    parameter MFHI              = 7'b0001111; // 15
-    parameter MFLO              = 7'b0010000; // 16
-    parameter SHIFT_SHAMT       = 7'b0010001; // 17
-    parameter SLL               = 7'b0010010; // 18
-    parameter SRL               = 7'b0010011; // 19
-    parameter SRA               = 7'b0010100; // 20
-    parameter SHIFT_REG         = 7'b0010101; // 21
-    parameter SRAV              = 7'b0010110; // 22
-    parameter SLLV              = 7'b0010111; // 23
-    parameter STORE_SHIFT       = 7'b0011000; // 24
-    parameter JR                = 7'b0011001; // 25
-    parameter SLT_1             = 7'b0011010; // 26
-    parameter SLT_2             = 7'b0011011; // 27
-    parameter BREAK_1           = 7'b0011100; // 28
-    parameter BREAK_2           = 7'b0011101; // 29
-    parameter RTE               = 7'b0011110; // 30
-    parameter ADDM_1            = 7'b0011111; // 31
-    parameter ADDM_2            = 7'b0100000; // 32
-    parameter ADDM_3            = 7'b0100001; // 33
-    parameter ADDM_4            = 7'b0100010; // 34
-    parameter ADDM_5            = 7'b0100011; // 35
-    parameter ADDM_6            = 7'b0100100; // 36
+    parameter ADD               = 7'b0000111; // 7 ok
+    parameter SUB               = 7'b0001000; // 8 ok
+    parameter AND               = 7'b0001001; // 9 ok
+    parameter ALU_TO_REG        = 7'b0001010; // 10 ok
+    parameter MULT_1            = 7'b0001011; // 11 ok
+    parameter MULT_2            = 7'b0001100; // 12 ok
+    parameter DIV_1             = 7'b0001101; // 13 ok
+    parameter DIV_2             = 7'b0001110; // 14 ok
+    parameter MFHI              = 7'b0001111; // 15 ok
+    parameter MFLO              = 7'b0010000; // 16 ok
+    parameter SHIFT_SHAMT       = 7'b0010001; // 17 ok
+    parameter SLL               = 7'b0010010; // 18 ok
+    parameter SRL               = 7'b0010011; // 19ok
+    parameter SRA               = 7'b0010100; // 20 ok
+    parameter SHIFT_REG         = 7'b0010101; // 21 ok
+    parameter SRAV              = 7'b0010110; // 22 ok
+    parameter SLLV              = 7'b0010111; // 23 ok
+    parameter STORE_SHIFT       = 7'b0011000; // 24 ok
+    parameter JR                = 7'b0011001; // 25 ok
+    parameter SLT_1             = 7'b0011010; // 26 ok
+    parameter SLT_2             = 7'b0011011; // 27 ok
+    parameter BREAK_1           = 7'b0011100; // 28 ok
+    parameter BREAK_2           = 7'b0011101; // 29 ok
+    parameter RTE               = 7'b0011110; // 30 ok
+    parameter ADDM_1            = 7'b0011111; // 31 ok
+    parameter ADDM_2            = 7'b0100000; // 32 ok
+    parameter ADDM_3            = 7'b0100001; // 33 ok
+    parameter ADDM_4            = 7'b0100010; // 34 ok
+    parameter ADDM_5            = 7'b0100011; // 35 ok 
+    parameter ADDM_6            = 7'b0100100; // 36 ok
     //ESTADOS DO FORMATO J
-    parameter J                 = 7'b0100101; // 37
-    parameter JAL_1             = 7'b0100110; // 38
-    parameter JAL_2             = 7'b0100111; // 39
-    parameter JAL_3             = 7'b0101000; // 40
-    //ESTADOS DO FORMATO I
-    parameter ADDI_ADDIU        = 7'b0101001; // 41
-    parameter ADDI              = 7'b0101010; // 42
-    parameter ADDIU             = 7'b0101011; // 43
-    parameter BEQ_BNE_BGT_BLE   = 7'b0101100; // 44
-    parameter BEQ               = 7'b0101101; // 45
-    parameter BNE               = 7'b0101110; // 46
-    parameter BGT               = 7'b0101111; // 47
-    parameter BLE               = 7'b0110000; // 48
-    parameter LB_LH_LW          = 7'b0110001; // 49
-    parameter LB                = 7'b0110010; // 50
-    parameter LH                = 7'b0110011; // 51
-    parameter LW                = 7'b0110100; // 52
-    parameter SB_SH_SW          = 7'b0110101; // 53
-    parameter SB                = 7'b0110110; // 54
-    parameter SH                = 7'b0110111; // 55
-    parameter SW                = 7'b0111000; // 56
-    parameter LUI               = 7'b0111001; // 57
-    parameter SLTI_1            = 7'b0111010; // 58
-    parameter SLTI_2            = 7'b0111011; // 59
-    parameter SLLM_1            = 7'b0111100; // 60
-    parameter SLLM_2            = 7'b0111101; // 61
-    parameter SLLM_3            = 7'b0111110; // 62
+    parameter J                 = 7'b0100101; // 37 ok
+    parameter JAL_1             = 7'b0100110; // 38 ok
+    parameter JAL_2             = 7'b0100111; // 39 ok
+    parameter JAL_3             = 7'b0101000; // 40 ok
+    //ESTADOS DO FORMATO I  
+    parameter ADDI_ADDIU        = 7'b0101001; // 41 ok
+    parameter ADDI              = 7'b0101010; // 42 ok
+    parameter ADDIU             = 7'b0101011; // 43 ok
+    parameter BEQ_BNE_BGT_BLE   = 7'b0101100; // 44 ok
+    parameter BEQ               = 7'b0101101; // 45 ok
+    parameter BNE               = 7'b0101110; // 46 ok
+    parameter BGT               = 7'b0101111; // 47 ok
+    parameter BLE               = 7'b0110000; // 48 ok
+    parameter LB_LH_LW          = 7'b0110001; // 49 ok
+    parameter LB                = 7'b0110010; // 50 ok
+    parameter LH                = 7'b0110011; // 51 ok
+    parameter LW                = 7'b0110100; // 52 ok
+    parameter SB_SH_SW          = 7'b0110101; // 53 ok
+    parameter SB                = 7'b0110110; // 54 ok
+    parameter SH                = 7'b0110111; // 55 ok
+    parameter SW                = 7'b0111000; // 56 ok
+    parameter LUI               = 7'b0111001; // 57 ok
+    parameter SLTI_1            = 7'b0111010; // 58 ok
+    parameter SLTI_2            = 7'b0111011; // 59 ok
+    parameter SLLM_1            = 7'b0111100; // 60 ok
+    parameter SLLM_2            = 7'b0111101; // 61 ok
+    parameter SLLM_3            = 7'b0111110; // 62 ok
     //ESTADOS DE EXCEPTIONS
     parameter UNDEF_OP          = 7'b0111111; // 63
     parameter OVERFLOW          = 7'b1000000; // 64
@@ -132,7 +132,7 @@ reg [2:0]   CONTADOR;
     parameter LOAD_EXP_TO_PC_1  = 7'b1000010; // 66
     parameter LOAD_EXP_TO_PC_2  = 7'b1000011; // 67
     //LOCK WRITE
-    parameter LOCK_WRITE        = 7'b1000100; // 68
+    parameter LOCK_WRITE        = 7'b1000100; // 68 ok
 
 
 
@@ -196,12 +196,18 @@ reg [2:0]   CONTADOR;
 
         A_w = 1'b0;
         B_w = 1'b0;
+        MemDataRegLoad = 1'b0;
+        PCWrite = 1'b0; 
+        PCWriteCond = 1'b0;// ?
+        MemReadOrWrite = 1'b0;
+        IRWrite = 1 'b0;
+        AluOutWrite = 1'b0;
+        EPCWrite = 1'b0;
+        initDiv = 1'b0;// ?
+        initMult = 1'b0;// ?
         HIWrite = 1'b0;
         LOWrite = 1'b0;
-        PCWrite = 1'b0;
-        MemReadOrWrite = 1'b0;
-        IRWrite = 1'b0;
-        BranchOp = 2'b00;
+        CauseWrite = 1'b0;// ?
       end else begin
         case(ESTADO)
           FETCH: begin
@@ -212,6 +218,20 @@ reg [2:0]   CONTADOR;
             IorD = 3'b000;
 
             //resto
+            A_w = 1'b0;
+            B_w = 1'b0;
+            MemDataRegLoad = 1'b0; 
+            PCWrite = 1'b0; 
+            PCWriteCond = 1'b0;// ?
+            MemReadOrWrite = 1'b0;
+            IRWrite = 1 'b0;
+            RegWrite = 1'b0;
+            EPCWrite = 1'b0;
+            initDiv = 1'b0;// ?
+            initMult = 1'b0;// ?
+            HIWrite = 1'b0;
+            LOWrite = 1'b0;
+            CauseWrite = 1'b0;// ?
 
             //NEXT STATE
             ESTADO = FETCH_2;
@@ -221,6 +241,20 @@ reg [2:0]   CONTADOR;
             PCWrite = 1'b1;
 
             //resto
+            A_w = 1'b0;
+            B_w = 1'b0;
+            MemDataRegLoad = 1'b0; 
+            PCWriteCond = 1'b0;// ?
+            MemReadOrWrite = 1'b0;
+            IRWrite = 1 'b0;
+            RegWrite = 1'b0;
+            AluOutWrite = 1'b0;
+            EPCWrite = 1'b0;
+            initDiv = 1'b0;// ?
+            initMult = 1'b0;// ?
+            HIWrite = 1'b0;
+            LOWrite = 1'b0;
+            CauseWrite = 1'b0;// ?
 
             //next stage
             ESTADO = FETCH_3;
@@ -229,10 +263,23 @@ reg [2:0]   CONTADOR;
             PCWrite = 1'b0;
             MemReadOrWrite = 1'b0;
 
-              //resto
+            //resto
+            A_w = 1'b0;
+            B_w = 1'b0;
+            MemDataRegLoad = 1'b0;
+            PCWriteCond = 1'b0;// ?
+            IRWrite = 1 'b0;
+            RegWrite = 1'b0;
+            AluOutWrite = 1'b0;
+            EPCWrite = 1'b0;
+            initDiv = 1'b0;// ?
+            initMult = 1'b0;// ?
+            HIWrite = 1'b0;
+            LOWrite = 1'b0;
+            CauseWrite = 1'b0;// ?
 
-              //next stage
-              ESTADO = DECODE;
+            //next stage
+            ESTADO = DECODE;
           end
           DECODE: begin
             AluSrcA = 1'b0;
@@ -241,6 +288,20 @@ reg [2:0]   CONTADOR;
             IRWrite = 1'b0;
 
             //resto
+            A_w = 1'b0;
+            B_w = 1'b0;
+            MemDataRegLoad = 1'b0;
+            PCWrite = 1'b0; 
+            PCWriteCond = 1'b0;// ?
+            MemReadOrWrite = 1'b0;
+            RegWrite = 1'b0;
+            AluOutWrite = 1'b0;
+            EPCWrite = 1'b0;
+            initDiv = 1'b0;// ?
+            initMult = 1'b0;// ?
+            HIWrite = 1'b0;
+            LOWrite = 1'b0;
+            CauseWrite = 1'b0;// ?
 
             //next state
             ESTADO = DECODE_2;
@@ -254,10 +315,22 @@ reg [2:0]   CONTADOR;
             B_w = 1'b1;
 
             //resto
+            MemDataRegLoad = 1'b0;
+            PCWrite = 1'b0; 
+            PCWriteCond = 1'b0;// ?
+            MemReadOrWrite = 1'b0;
+            IRWrite = 1 'b0;
+            EPCWrite = 1'b0;
+            initDiv = 1'b0;// ?
+            initMult = 1'b0;// ?
+            HIWrite = 1'b0;
+            LOWrite = 1'b0;
+            CauseWrite = 1'b0;// ?
 
             //next state
 
             case(Opcode)
+
               //INTRUÇÕES EM R
               OP_R: begin
 
@@ -313,61 +386,63 @@ reg [2:0]   CONTADOR;
                       FUNCT_ADDM: begin
                         ESTADO = ADDM_1;
                       end
-                  endcase
-              end
+                    endcase
+                end
                   //INSTRUÇÕES I
-              OP_ADDI: begin
-                  ESTADO = ADDI_ADDIU;
-              end
-              OP_ADDIU: begin
-                  ESTADO = ADDI_ADDIU;
-              end
-              OP_BEQ: begin
-                  ESTADO = BEQ_BNE_BGT_BLE;
-              end
-              OP_BNE: begin
-                ESTADO = BEQ_BNE_BGT_BLE;
-              end
-              OP_BLE: begin
-                ESTADO = BEQ_BNE_BGT_BLE;
-              end
-              OP_BGT: begin
-                ESTADO =BEQ_BNE_BGT_BLE;
-              end
-              OP_SLLM: begin
-                ESTADO = SLLM_1;
-              end
-              OP_SLTI: begin
-                ESTADO = SLTI_1;
-              end
-              OP_LUI: begin
-                ESTADO = LUI;
-              end
-              OP_SB: begin
-                ESTADO = SB_SH_SW;
-              end
-              OP_SH: begin
-                ESTADO = SB_SH_SW;
-              end
-              OP_SW: begin
-                ESTADO = SB_SH_SW;
-              end
-              OP_LB:begin
-                ESTADO = LB_LH_LW;
-              end
-              OP_LH:begin
-                ESTADO = LB_LH_LW;
-              end
-              OP_LW:begin
-                ESTADO = LB_LH_LW;
-              end
-                  //INSTRUÇÕES J
-              OP_J: begin
-                  ESTADO = J;
-              end
-              OP_JAL: begin
-                  ESTADO = JAL_1;
-              end    
+                    OP_ADDI: begin
+                        ESTADO = ADDI_ADDIU;
+                    end
+                    OP_ADDIU: begin
+                        ESTADO = ADDI_ADDIU;
+                    end
+                    OP_BEQ: begin
+                        ESTADO = BEQ_BNE_BGT_BLE;
+                    end
+                    OP_BNE: begin
+                      ESTADO = BEQ_BNE_BGT_BLE;
+                    end
+                    OP_BLE: begin
+                      ESTADO = BEQ_BNE_BGT_BLE;
+                    end
+                    OP_BGT: begin
+                      ESTADO =BEQ_BNE_BGT_BLE;
+                    end
+                    OP_SLLM: begin
+                      ESTADO = SLLM_1;
+                    end
+                    OP_SLTI: begin
+                      ESTADO = SLTI_1;
+                    end
+                    OP_LUI: begin
+                      ESTADO = LUI;
+                    end
+                    OP_SB: begin
+                      ESTADO = SB_SH_SW;
+                    end
+                    OP_SH: begin
+                      ESTADO = SB_SH_SW;
+                    end
+                    OP_SW: begin
+                      ESTADO = SB_SH_SW;
+                    end
+                    OP_LB:begin
+                      ESTADO = LB_LH_LW;
+                    end
+                    OP_LH:begin
+                      ESTADO = LB_LH_LW;
+                    end
+                    OP_LW:begin
+                      ESTADO = LB_LH_LW;
+                    end
+                        //INSTRUÇÕES J
+                    OP_J: begin
+                        ESTADO = J;
+                    end
+                    OP_JAL: begin
+                        ESTADO = JAL_1;
+                    end
+                endcase //opcode
+            end //decode 2    
               //ESTADOS DAS INSTRUÇÕES R
               ADD: begin
                 AluSrcA = 1'b1;
@@ -376,6 +451,20 @@ reg [2:0]   CONTADOR;
                 AluOutWrite = 1;
                 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next stage
                 if (OVERFLOW) begin
@@ -391,6 +480,20 @@ reg [2:0]   CONTADOR;
                 AluOutWrite = 1;
                 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next stage
                 if (OVERFLOW) begin
@@ -406,6 +509,20 @@ reg [2:0]   CONTADOR;
                 AluOutWrite = 1;
                 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next stage
                 ESTADO = ALU_TO_REG;
@@ -416,6 +533,20 @@ reg [2:0]   CONTADOR;
                 RegDst = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //NEXT STATE
                 ESTADO = LOCK_WRITE;
@@ -424,6 +555,20 @@ reg [2:0]   CONTADOR;
                 initMult = 1'b1; 
 
                 //resto 
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = MULT_2;
@@ -435,6 +580,19 @@ reg [2:0]   CONTADOR;
                 LOWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -443,15 +601,44 @@ reg [2:0]   CONTADOR;
                 initDiv = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0;
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = DIV_2;
               end
               DIV_2: begin
-                OPhi = 1'b1;
-                OPlow = 1'b1;
+                OPhi = 1'b0;
+                OPlow = 1'b0;
+                HIWrite = 1'b1;
+                LOWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 if (Bvalue == 32'b00000000000000000000000000000000) begin
@@ -466,6 +653,20 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0;
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -475,7 +676,21 @@ reg [2:0]   CONTADOR;
                 RegDst = 1'b1;
                 RegWrite = 1'b1;
 
-                //resto 
+                //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ? 
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -485,6 +700,21 @@ reg [2:0]   CONTADOR;
                 MuxShiftQtd = 2'b01;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 if (Funct == FUNCT_SLL) begin
@@ -502,6 +732,21 @@ reg [2:0]   CONTADOR;
                 Shift = 3'b010;
 
                 //RESTO
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //NEXT STATE
                 ESTADO = STORE_SHIFT;
@@ -510,6 +755,21 @@ reg [2:0]   CONTADOR;
                 Shift = 3'b100;
 
                 //RESTO
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0;
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //NEXT STATE
                 ESTADO = STORE_SHIFT;
@@ -518,6 +778,21 @@ reg [2:0]   CONTADOR;
                 Shift = 3'b011;
 
                 //RESTO
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0;
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //NEXT STATE
                 ESTADO = STORE_SHIFT;
@@ -528,6 +803,21 @@ reg [2:0]   CONTADOR;
                 Shift = 3'b001;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 if (Funct == FUNCT_SLLV) begin
@@ -541,6 +831,21 @@ reg [2:0]   CONTADOR;
                 Shift = 3'b100;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = STORE_SHIFT;
@@ -549,6 +854,21 @@ reg [2:0]   CONTADOR;
                 Shift = 3'b010;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = STORE_SHIFT;
@@ -559,6 +879,20 @@ reg [2:0]   CONTADOR;
                 RegDst = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -570,6 +904,20 @@ reg [2:0]   CONTADOR;
                 PCWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -580,6 +928,21 @@ reg [2:0]   CONTADOR;
                 AluOP = 3'b111;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = SLT_2;
@@ -590,6 +953,20 @@ reg [2:0]   CONTADOR;
                 RegDst = 1'b1;
 
                 //RESTO
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //NEXT STATE
                 ESTADO = LOCK_WRITE;
@@ -600,6 +977,21 @@ reg [2:0]   CONTADOR;
                 AluOP = 3'b010;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = BREAK_2;
@@ -609,6 +1001,20 @@ reg [2:0]   CONTADOR;
                 PCWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -618,6 +1024,20 @@ reg [2:0]   CONTADOR;
                 PCWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -627,6 +1047,20 @@ reg [2:0]   CONTADOR;
                 MemReadOrWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = ADDM_2;
@@ -636,6 +1070,20 @@ reg [2:0]   CONTADOR;
                 A_w = 1'b1;
 
                 //resto
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = ADDM_2;
@@ -645,6 +1093,20 @@ reg [2:0]   CONTADOR;
                 MemReadOrWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = ADDM_4;
@@ -654,6 +1116,20 @@ reg [2:0]   CONTADOR;
                 B_w = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                MemDataRegLoad = 1'b0;
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = ADDM_5;
@@ -664,6 +1140,21 @@ reg [2:0]   CONTADOR;
                 AluOP = 3'b001;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = ADDM_6;
@@ -675,6 +1166,19 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -689,6 +1193,20 @@ reg [2:0]   CONTADOR;
                 AluOutWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 if(Opcode == OP_ADDI) begin
@@ -704,6 +1222,20 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto 
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 if (OVERFLOW) begin
@@ -718,6 +1250,20 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto 
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -728,6 +1274,21 @@ reg [2:0]   CONTADOR;
                 AluOP = 3'b111;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 if(Opcode == OP_BEQ) begin
@@ -749,6 +1310,20 @@ reg [2:0]   CONTADOR;
                 PCWriteCond = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -759,6 +1334,20 @@ reg [2:0]   CONTADOR;
                 PCWriteCond = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0;
+                PCWrite = 1'b0; 
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -769,6 +1358,20 @@ reg [2:0]   CONTADOR;
                 PCWriteCond = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -779,6 +1382,20 @@ reg [2:0]   CONTADOR;
                 PCWriteCond = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -790,6 +1407,21 @@ reg [2:0]   CONTADOR;
                 AluOP = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 if(Opcode == OP_LW) begin
@@ -812,7 +1444,18 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto
-
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                IRWrite = 1 'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -827,7 +1470,18 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto
-
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                IRWrite = 1 'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -841,7 +1495,19 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto
-
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -853,6 +1519,21 @@ reg [2:0]   CONTADOR;
                 AluOP = 3'b001;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 if(Opcode == OP_SW) begin
@@ -873,6 +1554,19 @@ reg [2:0]   CONTADOR;
                 MemReadOrWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -886,6 +1580,19 @@ reg [2:0]   CONTADOR;
                 MemReadOrWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0;
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -899,6 +1606,19 @@ reg [2:0]   CONTADOR;
                 MemReadOrWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -912,6 +1632,20 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -923,6 +1657,21 @@ reg [2:0]   CONTADOR;
                 AluOP = 3'b111;
 
                 //RESTO
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //NEXT STATE
                 ESTADO = SLTI_2;
@@ -933,6 +1682,20 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -946,6 +1709,20 @@ reg [2:0]   CONTADOR;
                 AluOutWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = SLLM_2;
@@ -961,6 +1738,19 @@ reg [2:0]   CONTADOR;
                 Shift = 3'b010;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = SLLM_3;
@@ -971,6 +1761,20 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -982,6 +1786,21 @@ reg [2:0]   CONTADOR;
                 PCWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0;
+
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE; 
@@ -991,6 +1810,21 @@ reg [2:0]   CONTADOR;
                 AluOP = 3'b000;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = JAL_2;
@@ -1002,6 +1836,20 @@ reg [2:0]   CONTADOR;
                 RegWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWrite = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = JAL_3;
@@ -1011,6 +1859,20 @@ reg [2:0]   CONTADOR;
                 PCWrite = 1'b1;
 
                 //resto
+                A_w = 1'b0;
+                B_w = 1'b0;
+                MemDataRegLoad = 1'b0; 
+                PCWriteCond = 1'b0;// ?
+                MemReadOrWrite = 1'b0;
+                IRWrite = 1 'b0;
+                RegWrite = 1'b0;
+                AluOutWrite = 1'b0;
+                EPCWrite = 1'b0;
+                initDiv = 1'b0;// ?
+                initMult = 1'b0;// ?
+                HIWrite = 1'b0;
+                LOWrite = 1'b0;
+                CauseWrite = 1'b0;// ?
 
                 //next state
                 ESTADO = LOCK_WRITE;
@@ -1055,8 +1917,6 @@ reg [2:0]   CONTADOR;
                 //next state
                 ESTADO = FETCH;
               end
-            endcase // opcode   
-          end // DECODE 2
         endcase // ESTADO
       end //else
     end // wlways
