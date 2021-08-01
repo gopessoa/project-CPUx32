@@ -1428,7 +1428,7 @@ reg [2:0]   CONTADOR;
             end
             SLT_1: begin
               AluSrcA = 1'b0;
-              AluSrcB = 1'b0;
+              AluSrcB = 2'b00;
               AluOP = 3'b111;
 
               //NÃO USADOS
@@ -1514,7 +1514,7 @@ reg [2:0]   CONTADOR;
             end
             BREAK_1: begin
               AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               AluOP = 3'b010;
 
               //NÃO USADOS
@@ -3266,7 +3266,7 @@ reg [2:0]   CONTADOR;
             end
             UNDEF_OP: begin
               AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               AluOP = 3'b010;
               EPCWrite = 1'b1;
               ExceptionAddress = 8'b11111101;
@@ -3309,7 +3309,7 @@ reg [2:0]   CONTADOR;
             end
             UNDEF_OPCODE_WAIT1: begin
                             AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               AluOP = 3'b010;
               EPCWrite = 1'b1;
               ExceptionAddress = 8'b11111101;
@@ -3349,7 +3349,7 @@ reg [2:0]   CONTADOR;
             end
             UNDEF_OPCODE_WAIT2: begin
               AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               AluOP = 3'b010;
               EPCWrite = 1'b1;
               ExceptionAddress = 8'b11111101;
@@ -3388,7 +3388,7 @@ reg [2:0]   CONTADOR;
             end
             OVERFLOW: begin
               AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               AluOP = 3'b010;
               EPCWrite = 1'b1;
               ExceptionAddress = 8'b11111110;
@@ -3431,7 +3431,7 @@ reg [2:0]   CONTADOR;
             end
             OVERFLOW_WAIT1: begin
               AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               AluOP = 3'b010;
               EPCWrite = 1'b1;
               ExceptionAddress = 8'b11111110;
@@ -3474,7 +3474,7 @@ reg [2:0]   CONTADOR;
             OVERFLOW_WAIT2: begin
 
               AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               AluOP = 3'b010;
               EPCWrite = 1'b1;
               ExceptionAddress = 8'b11111110;
@@ -3516,7 +3516,7 @@ reg [2:0]   CONTADOR;
             end
             DIV_BY_ZERO: begin
               AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               AluOP = 3'b010;
               EPCWrite = 1'b1;
               ExceptionAddress = 8'b11111111;
@@ -3559,7 +3559,7 @@ reg [2:0]   CONTADOR;
             end
             DIV_BY_0_WAIT1: begin
                             AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               AluOP = 3'b010;
               EPCWrite = 1'b1;
               ExceptionAddress = 8'b11111111;
@@ -3648,7 +3648,7 @@ reg [2:0]   CONTADOR;
             end
             LOAD_EXP_TO_PC_2: begin
               AluSrcA = 1'b0;
-              AluSrcB = 1'b1;
+              AluSrcB = 2'b01;
               PCSource = 3'b000;
               PCWrite = 1'b1;
 
