@@ -431,7 +431,7 @@ reg [2:0]   CONTADOR;
  
             RegWrite = 1'b0;
             LoadAMem = 1'b0;
-            LoadBMem = 1'b00;
+            LoadBMem = 1'b0;
 
             //NÃO USADOS
             MemDataRegLoad = 1'b0;
