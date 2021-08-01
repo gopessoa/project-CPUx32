@@ -722,7 +722,7 @@ reg [2:0]   CONTADOR;
               //USADOS
               MemToReg = 4'b0101;
               RegWrite = 1'b1;
-              RegDst = 1'b1;
+              RegDst = 3'b001;
 
               //NÃO USADOS
               A_w = 1'b0;
@@ -941,7 +941,7 @@ reg [2:0]   CONTADOR;
             end
             MFHI: begin
               MemToReg = 4'b0110;
-              RegDst = 1'b1;
+              RegDst = 3'b001;
               RegWrite = 1'b1;
 
               //NÃO USADOS
@@ -984,7 +984,7 @@ reg [2:0]   CONTADOR;
             end
             MFLO: begin
               MemToReg = 4'b0111;
-              RegDst = 1'b1;
+              RegDst = 3'b001;
               RegWrite = 1'b1;
 
               //NÃO USADOS
@@ -1343,7 +1343,7 @@ reg [2:0]   CONTADOR;
             STORE_SHIFT: begin
               MemToReg = 4'b0011;
               RegWrite = 1'b1;
-              RegDst = 1'b1;
+              RegDst = 3'b001;
 
               //NÃO USADOS
               A_w = 1'b0;
@@ -1472,7 +1472,7 @@ reg [2:0]   CONTADOR;
             SLT_2: begin
               MemToReg = 4'b0100;
               RegWrite = 1'b1;
-              RegDst = 1'b1;
+              RegDst = 3'b001;
 
               //NÃO USADOS
               A_w = 1'b0;
@@ -2031,7 +2031,7 @@ reg [2:0]   CONTADOR;
             ADDM_6: begin
               AluOutWrite = 1'b1;
               MemToReg = 4'b0101;
-              RegDst = 1'b1;
+              RegDst = 3'b001;
               RegWrite = 1'b1;
 
               //NÃO USADOS
@@ -2488,9 +2488,9 @@ reg [2:0]   CONTADOR;
             end
             LW: begin
               AluOutWrite = 1'b1;
-              IorD = 1'b1;
+              IorD = 3'b001;
               MemReadOrWrite = 1'b1;
-              RegDst = 1'b0;
+              RegDst = 3'b000;
               ExtendOP = 1'b0;
               MemToReg = 4'b0000;
               RegWrite = 1'b1;
@@ -2531,9 +2531,9 @@ reg [2:0]   CONTADOR;
             end
             LH: begin
               AluOutWrite = 1'b1;
-              IorD = 1'b1;
+              IorD = 3'b001;
               MemReadOrWrite = 1'b1;
-              RegDst = 1'b0;
+              RegDst = 3'b000;
               ExtendOP = 1'b0;
               MemToReg = 4'b0001;
               RegWrite = 1'b1;
@@ -2574,9 +2574,9 @@ reg [2:0]   CONTADOR;
             end
             LB: begin
               AluOutWrite = 1'b1;
-              IorD = 1'b1;
+              IorD = 3'b001;
               MemReadOrWrite = 1'b1;
-              RegDst = 1'b0;
+              RegDst = 3'b000;
               MemToReg = 4'b0010;
               RegWrite = 1'b1;
 
@@ -2667,7 +2667,7 @@ reg [2:0]   CONTADOR;
             SW: begin
               AluOutWrite = 1'b1;
               LoadBMem = 1'b0;
-              IorD = 1'b1;
+              IorD = 3'b001;
               WDMux = 1'b1;
               MemReadOrWrite = 1'b1;
 
@@ -2711,7 +2711,7 @@ reg [2:0]   CONTADOR;
             SH: begin
               AluOutWrite = 1'b1;
               LoadBMem = 1'b0;
-              IorD = 1'b1;
+              IorD = 3'b001;
               WDMux = 1'b0;
               MuxBH = 1'b0;
               MemReadOrWrite = 1'b1;
@@ -2754,7 +2754,7 @@ reg [2:0]   CONTADOR;
             SB: begin
               AluOutWrite = 1'b1;
               LoadBMem = 1'b0;
-              IorD = 1'b1;
+              IorD = 3'b001;
               WDMux = 1'b0;
               MuxBH = 1'b1;
               MemReadOrWrite = 1'b1;
@@ -2969,7 +2969,7 @@ reg [2:0]   CONTADOR;
             SLLM_2: begin
               PCSource = 3'b001;
               PCWrite = 1'b1;
-              IorD = 1'b0;
+              IorD = 3'b000;
               MemReadOrWrite = 1'b1;
               MuxShiftInput = 2'b00;
               MuxShiftQtd = 2'b00;
