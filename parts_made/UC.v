@@ -302,7 +302,7 @@ reg [2:0]   CONTADOR;
             AluOP = 3'b001;
             AluOutWrite = 1'b1;
             IorD = 3'b000;
-            MemReadOrWrite = 1'b0 ;
+            MemReadOrWrite = 1'b0;
 
             //NÃO USADOS
             A_w = 1'b0;
@@ -311,22 +311,17 @@ reg [2:0]   CONTADOR;
             PCWrite = 1'b0; 
             PCWriteCond = 1'b0;// ?
             IRWrite = 1 'b0;
-            AluOutWrite = 1'b0;
             EPCWrite = 1'b0;
             HIWrite = 1'b0;
             LOWrite = 1'b0;
             CauseWrite = 1'b0;// ?
             WDMux = 1'b0;
             PCSource = 3'b000;
-            IorD = 3'b000;
             RegDst = 2'b00;
             RegWrite = 1'b0;
             MemToReg = 4'b0000;
             LoadAMem = 1'b0;
             LoadBMem = 1'b0;
-            AluSrcA = 1'b0;
-            AluSrcB = 2'b00;
-            AluOP = 3'b000;
             BranchOp = 2'b00;
             MuxShiftQtd = 2'b00;
             MuxShiftInput = 2'b00;
