@@ -431,7 +431,7 @@ reg [2:0]   CONTADOR;
  
             RegWrite = 1'b0;
             LoadAMem = 1'b0;
-            LoadBMem = 1'b00;
+            LoadBMem = 2'b00;
 
             //NÃO USADOS
             MemDataRegLoad = 1'b0;
@@ -2796,7 +2796,8 @@ reg [2:0]   CONTADOR;
               ESTADO = LOCK_WRITE;
             end
             LUI: begin
-              MemToReg = 2'b11;
+              ExtendOP = 1'b1;
+              MemToReg = 4'b0011;
               MuxShiftInput = 2'b10;
               MuxShiftQtd = 2'b11;
               RegDst = 2'b00;
