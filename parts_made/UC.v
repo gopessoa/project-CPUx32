@@ -2841,7 +2841,7 @@ reg [4:0]   CONTADOR = 5'b00000;
             end
             LUI_WAIT:begin
               //next state
-              if(CONTADOR == 5'b10000)begin
+              if(CONTADOR == 5'b10001)begin
                 CONTADOR = 5'b00000;
                 ESTADO = LUI_2;                
               end
@@ -2864,10 +2864,6 @@ reg [4:0]   CONTADOR = 5'b00000;
               IRWrite = 1 'b0;
               AluOutWrite = 1'b0;
               EPCWrite = 1'b0;
-              ExtendOP = 1'b0;
-              MuxShiftInput = 2'b00;
-              MuxShiftQtd = 2'b00;
-              Shift = 3'b000;
               
               HIWrite = 1'b0;
               LOWrite = 1'b0;
