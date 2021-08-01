@@ -150,6 +150,8 @@ reg [2:0]   CONTADOR;
        //FETCH
     parameter DECODE_WAIT = 7'b1001111; //79 ok
     parameter FETCH_WAIT_2 = 7'b1010000; //80 ok
+      //ADDI
+    parameter ADDI_ADDIU_WAIT = 7'b1010001; //81
 
       
 
@@ -2075,7 +2077,7 @@ reg [2:0]   CONTADOR;
             //ESTADOS INSTRUÇÕES I
             ADDI_ADDIU: begin
               ExtendOP = 1'b1;
-              AluSrcB = 2'b11;
+              AluSrcB = 2'b10;
               AluSrcA = 1'b1;
               AluOP = 3'b001;
               AluOutWrite = 1'b1;
@@ -2101,7 +2103,6 @@ reg [2:0]   CONTADOR;
               MemToReg = 4'b0000;
               LoadAMem = 1'b0;
               LoadBMem = 1'b0;
-              AluSrcB = 2'b00;
               MuxShiftQtd = 2'b00;
               MuxShiftInput = 2'b00;
               OPlow = 1'b0;
@@ -2113,7 +2114,7 @@ reg [2:0]   CONTADOR;
               Shift = 3'b000;
               INTCause = 1'b0;
 
-              //next state
+              //NEXT STATE
               if(Opcode == OP_ADDI) begin
                 ESTADO = ADDI;
               end 
@@ -2795,7 +2796,7 @@ reg [2:0]   CONTADOR;
               ESTADO = LOCK_WRITE;
             end
             LUI: begin
-              MemToReg = 4'b0011;
+              MemToReg = 2'b11;
               MuxShiftInput = 2'b10;
               MuxShiftQtd = 2'b11;
               RegDst = 2'b00;
