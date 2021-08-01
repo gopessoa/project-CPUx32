@@ -2121,6 +2121,7 @@ reg [2:0]   CONTADOR;
                 ESTADO = ADDIU;
               end
             end
+            ////////////PRECISA DE UM WAIT//////////
             ADDI: begin
               MemToReg = 4'b0101;
               RegDst = 2'b00;
