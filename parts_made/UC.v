@@ -54,12 +54,12 @@ module UC(
 
 //variáveis
 reg [6:0]   ESTADO;
-reg [2:0]   CONTADOR;
+reg [4:0]   CONTADOR = 5'b00000;
 
 //CONSTANTES
     //ESTADOS PRINCIPAIS
-    parameter RESET           = 7'b0000000; // 0 ok
-    parameter FETCH           = 7'b0000001; // 1 ok
+    parameter RESET             = 7'b0000000; // 0 ok
+    parameter FETCH             = 7'b0000001; // 1 ok
     parameter FETCH_2           = 7'b0000010; // 2 ok
     parameter FETCH_3           = 7'b0000011; // 3 ok
     parameter DECODE            = 7'b0000100; // 4  ok
@@ -151,7 +151,8 @@ reg [2:0]   CONTADOR;
     parameter DECODE_WAIT = 7'b1001111; //79 ok
     parameter FETCH_WAIT_2 = 7'b1010000; //80 ok
       //LUI
-    parameter LUI_WAIT = 7'b1010001; //81
+    parameter LUI_WAIT  = 7'b1010001; //81
+    parameter LUI_2     = 7'b1010010; //82
 
       
 
@@ -2797,12 +2798,9 @@ reg [2:0]   CONTADOR;
             end
             LUI: begin //TALVEZ PRECISE DE UM WAIT
               ExtendOP = 1'b1;
-              MemToReg = 4'b0011;
               MuxShiftInput = 2'b10;
               MuxShiftQtd = 2'b11;
-              RegDst = 2'b00;
               Shift = 3'b010;
-              RegWrite = 1'b1;
 
               //NÃO USADOS
               A_w = 1'b0;
@@ -2814,6 +2812,9 @@ reg [2:0]   CONTADOR;
               IRWrite = 1 'b0;
               AluOutWrite = 1'b0;
               EPCWrite = 1'b0;
+              MemToReg = 4'b0000;
+              RegDst = 2'b00;
+              RegWrite = 1'b0;
               
               HIWrite = 1'b0;
               LOWrite = 1'b0;
@@ -2839,12 +2840,18 @@ reg [2:0]   CONTADOR;
               ESTADO = LUI_WAIT;
             end
             LUI_WAIT:begin
-              ExtendOP = 1'b1;
+              //next state
+              if(CONTADOR == 5'b10000)begin
+                CONTADOR = 5'b00000;
+                ESTADO = LUI_2;                
+              end
+              else begin
+                CONTADOR = CONTADOR + 5'b00001;
+              end
+            end
+            LUI_2:begin
               MemToReg = 4'b0011;
-              MuxShiftInput = 2'b10;
-              MuxShiftQtd = 2'b11;
               RegDst = 2'b00;
-              Shift = 3'b010;
               RegWrite = 1'b1;
 
               //NÃO USADOS
@@ -2857,6 +2864,10 @@ reg [2:0]   CONTADOR;
               IRWrite = 1 'b0;
               AluOutWrite = 1'b0;
               EPCWrite = 1'b0;
+              ExtendOP = 1'b0;
+              MuxShiftInput = 2'b00;
+              MuxShiftQtd = 2'b00;
+              Shift = 3'b000;
               
               HIWrite = 1'b0;
               LOWrite = 1'b0;
