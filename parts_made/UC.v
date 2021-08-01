@@ -2795,7 +2795,7 @@ reg [2:0]   CONTADOR;
               ESTADO = LOCK_WRITE;
             end
             LUI: begin
-              MemToReg = 2'b11;
+              MemToReg = 4'b0011;
               MuxShiftInput = 2'b10;
               MuxShiftQtd = 2'b11;
               RegDst = 2'b00;
